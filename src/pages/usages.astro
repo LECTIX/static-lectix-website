@@ -1,0 +1,45 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageIntro from "../components/PageIntro.astro";
+import { products } from "../data/products";
+import { useCases, useCaseCategories } from "../data/useCases";
+
+const productByCode = new Map(products.map((product) => [product.code, product]));
+---
+
+<BaseLayout
+  title="Automatismes et usages pour le train miniature — LECTIX"
+  description="Cantonnement, détection, arrêt automatique, navette, signalisation et autres automatismes réalisables avec les modules LECTIX."
+>
+  <PageIntro
+    eyebrow="Choisir par usage"
+    title="Que souhaitez-vous faire sur votre réseau ?"
+    lead="Retrouvez les principaux automatismes réalisables avec les produits LECTIX. Chaque lien conduit directement à l’explication et au schéma correspondant dans la fiche du module."
+  />
+  <section class="content-section usage-directory" aria-label="Liste des usages">
+    <div class="container">
+      {
+        useCaseCategories.map((category) => (
+          <section class="usage-category" aria-labelledby={`usage-${category.toLowerCase().replaceAll(" ", "-")}`}>
+            <h2 id={`usage-${category.toLowerCase().replaceAll(" ", "-")}`}>{category}</h2>
+            <div class="usage-grid">
+              {useCases.filter((useCase) => useCase.category === category).map((useCase) => (
+                <article class="usage-card" id={useCase.id}>
+                  <h3>{useCase.title}</h3>
+                  <p>{useCase.summary}</p>
+                  <div class="usage-products">
+                    <span>Modules et schémas :</span>
+                    {useCase.products.map(({ code, anchor }) => {
+                      const product = productByCode.get(code);
+                      return product && <a href={`/produit/${product.slug}/#${anchor}`}><strong>{code}</strong> {product.name}</a>;
+                    })}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

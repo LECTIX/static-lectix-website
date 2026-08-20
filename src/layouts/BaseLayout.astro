@@ -41,6 +41,7 @@ const isCurrent = (href: string) =>
         </a>
         <nav aria-label="Navigation principale">
           <a href="/" aria-current={isCurrent("/") ? "page" : undefined}>Accueil</a>
+          <a href="/usages/" aria-current={isCurrent("/usages/") ? "page" : undefined}>Usages</a>
           <a href="/produits/" aria-current={isCurrent("/produits/") || isCurrent("/produit/") ? "page" : undefined}>Produits</a>
           <a href="/open-source/" aria-current={isCurrent("/open-source/") ? "page" : undefined}>Open source</a>
           <a href="/a-propos/" aria-current={isCurrent("/a-propos/") ? "page" : undefined}>À propos</a>
@@ -59,6 +60,7 @@ const isCurrent = (href: string) =>
         </div>
         <div class="footer-links">
           <a href="/">Accueil</a>
+          <a href="/usages/">Usages</a>
           <a href="/produits/">Produits</a>
           <a href="/open-source/">Open source</a>
           <a href="/contact/">Contact</a>

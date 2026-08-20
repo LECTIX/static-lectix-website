@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { products, type Product } from "../../data/products";
+import ProductIllustration from "../../components/ProductIllustration.astro";
+import { useCases } from "../../data/useCases";
 
 export function getStaticPaths() {
   return products.map((product) => ({
@@ -14,11 +16,10 @@ type Props = {
 };
 
 const { product } = Astro.props;
-const getIllustrationId = (src: string) => {
-  const filename = src.split("/").at(-1)?.replace(/\.[^.]+$/, "") ?? "illustration";
-  const subject = filename.replace(/^lec\d+[a-z]?-/i, "");
-  return `${product.code.toLowerCase()}-${subject}`;
-};
+const productUseCases = useCases.flatMap((useCase) => {
+  const link = useCase.products.find(({ code }) => code === product.code);
+  return link ? [{ ...useCase, anchor: link.anchor }] : [];
+});
 ---
 
 <BaseLayout title={`${product.name} — LECTIX`} description={product.summary}>
@@ -46,11 +47,26 @@ const getIllustrationId = (src: string) => {
       </div>
     </div>
   </section>
+  {
+    productUseCases.length > 0 && (
+      <section class="product-use-section" aria-labelledby="utilisations-produit">
+        <div class="container product-use-inner">
+          <div>
+            <p class="eyebrow">Utilisations courantes</p>
+            <h2 id="utilisations-produit">Ce que vous pouvez faire avec ce produit</h2>
+          </div>
+          <div class="product-use-links">
+            {productUseCases.map((useCase) => <a href={`#${useCase.anchor}`}>{useCase.title}</a>)}
+          </div>
+        </div>
+      </section>
+    )
+  }
   <section class="content-section">
     <div class="container two-column-content">
       <div>
-        <p class="eyebrow">Caractéristiques</p>
-        <h2>Les points importants</h2>
+        <p class="eyebrow">Caractéristiques techniques</p>
+        <h2>Les principales données du module</h2>
       </div>
       <ul class="feature-list">
         {product.features.map((feature) => <li>{feature}</li>)}
@@ -60,11 +76,11 @@ const getIllustrationId = (src: string) => {
   <section class="product-guide-section" aria-labelledby="guide-produit">
     <div class="narrow">
       <p class="eyebrow">Description détaillée</p>
-      <h2 id="guide-produit">Installer et utiliser ce produit</h2>
+      <h2 id="guide-produit">Applications, câblage et réglages</h2>
       <div class="product-guide-list">
         {
           product.details.map((section) => (
-            <article class="product-guide-block">
+            <article class="product-guide-block" id={section.id}>
               <h3>{section.title}</h3>
               {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
               {
@@ -74,7 +90,21 @@ const getIllustrationId = (src: string) => {
                   </ul>
                 )
               }
+              {
+                section.steps && (
+                  <ol class="product-steps">
+                    {section.steps.map((item) => <li>{item}</li>)}
+                  </ol>
+                )
+              }
               {section.warning && <p class="product-warning"><strong>À retenir :</strong> {section.warning}</p>}
+              {
+                section.images && (
+                  <div class={`product-section-images ${section.images.length === 1 ? "single" : ""}`}>
+                    {section.images.map((image) => <ProductIllustration code={product.code} image={image} />)}
+                  </div>
+                )
+              }
             </article>
           ))
         }
@@ -90,13 +120,7 @@ const getIllustrationId = (src: string) => {
           <p class="gallery-instruction">Cliquez sur un schéma pour l’ouvrir en grand dans une nouvelle page. Vous pourrez ensuite l’imprimer.</p>
           <div class="product-gallery">
             {product.gallery.map((image) => (
-              <figure>
-                <a href={`/schema/${getIllustrationId(image.src)}/`} target="_blank" rel="noopener" aria-label={`${image.caption} — ouvrir en grand dans une nouvelle page`}>
-                  <img src={image.src} alt={image.alt} loading="lazy" />
-                  <span class="schema-action">Ouvrir en grand et imprimer <span aria-hidden="true">↗</span></span>
-                </a>
-                <figcaption>{image.caption}</figcaption>
-              </figure>
+              <ProductIllustration code={product.code} image={image} />
             ))}
           </div>
         </div>

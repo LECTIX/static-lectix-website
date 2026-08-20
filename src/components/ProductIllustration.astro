@@ -1,0 +1,18 @@
+---
+import { getIllustrationId, type ProductImage } from "../data/productDetails";
+
+type Props = {
+  code: string;
+  image: ProductImage;
+};
+
+const { code, image } = Astro.props;
+---
+
+<figure class="product-illustration">
+  <a href={`/schema/${getIllustrationId(code, image.src)}/`} target="_blank" rel="noopener" aria-label={`${image.caption} — ouvrir en grand dans une nouvelle page`}>
+    <img src={image.src} alt={image.alt} loading="lazy" />
+    <span class="schema-action">Ouvrir en grand et imprimer <span aria-hidden="true">↗</span></span>
+  </a>
+  <figcaption>{image.caption}</figcaption>
+</figure>

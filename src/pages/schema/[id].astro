@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { products, type Product } from "../../data/products";
-import type { ProductImage } from "../../data/productDetails";
+import { getIllustrationId, getProductImages, type ProductImage } from "../../data/productDetails";
 
 type Illustration = {
   id: string;
@@ -10,14 +10,8 @@ type Illustration = {
 };
 
 export function getStaticPaths() {
-  const getIllustrationId = (code: string, src: string) => {
-    const filename = src.split("/").at(-1)?.replace(/\.[^.]+$/, "") ?? "illustration";
-    const subject = filename.replace(/^lec\d+[a-z]?-/i, "");
-    return `${code.toLowerCase()}-${subject}`;
-  };
-
   return products.flatMap((product) =>
-    product.gallery.map((image) => ({
+    getProductImages(product).map((image) => ({
       params: { id: getIllustrationId(product.code, image.src) },
       props: { id: getIllustrationId(product.code, image.src), product, image },
     })),
