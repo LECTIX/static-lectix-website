@@ -29,7 +29,7 @@ Le résultat statique est généré dans `dist/`.
 1. déployer le contenu de `dist/` dans le dossier public du nouveau site ;
 2. déployer `server/contact.php` comme `public_html/api/contact.php` ;
 3. copier `server/contact-config.example.php` vers `contact-config.php`, deux niveaux au-dessus de l'endpoint, donc hors de `public_html` ;
-4. renseigner l'adresse destinataire, l'expéditeur du domaine et le secret Turnstile dans ce fichier privé ;
+4. renseigner l'adresse destinataire, l'expéditeur du domaine et le secret Turnstile dans ce fichier privé ; ne jamais placer ce secret dans le dépôt ni dans une variable `PUBLIC_` ;
 5. tester l'envoi et la délivrabilité avant la bascule du domaine.
 
 Le formulaire utilise le transport `hsendmail` déjà disponible sur l'hébergement Hostinger Premium. SMTP reste une solution de repli si la délivrabilité est insuffisante.

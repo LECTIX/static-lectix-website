@@ -44,8 +44,18 @@ if (!is_array($config)) {
     redirectWithStatus('error');
 }
 
+$allowedOrigins = array_values(array_filter(
+    $config['allowed_origins'] ?? [],
+    static fn ($value): bool => is_string($value) && $value !== ''
+));
+$expectedHostnames = array_values(array_filter(
+    $config['expected_hostnames'] ?? [],
+    static fn ($value): bool => is_string($value) && $value !== ''
+));
+$turnstileSecret = (string) ($config['turnstile_secret'] ?? '');
+
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-if ($origin !== '' && !hash_equals((string) ($config['allowed_origin'] ?? ''), $origin)) {
+if ($origin !== '' && !in_array($origin, $allowedOrigins, true)) {
     redirectWithStatus('error');
 }
 
@@ -70,13 +80,14 @@ if (
     $email === '' || mb_strlen($email) > MAX_EMAIL_LENGTH || !filter_var($email, FILTER_VALIDATE_EMAIL) ||
     $subject === '' || mb_strlen($subject) > MAX_SUBJECT_LENGTH ||
     $message === '' || mb_strlen($message) > MAX_MESSAGE_LENGTH ||
-    $token === '' || strlen($token) > 2048
+    $token === '' || strlen($token) > 2048 ||
+    $turnstileSecret === '' || $expectedHostnames === []
 ) {
     redirectWithStatus('error');
 }
 
 $verificationPayload = http_build_query([
-    'secret' => (string) ($config['turnstile_secret'] ?? ''),
+    'secret' => $turnstileSecret,
     'response' => $token,
     'remoteip' => $_SERVER['REMOTE_ADDR'] ?? '',
 ]);
@@ -107,7 +118,7 @@ if (
     $verificationStatus !== 200 ||
     !is_array($verification) ||
     ($verification['success'] ?? false) !== true ||
-    !hash_equals((string) ($config['expected_hostname'] ?? ''), (string) ($verification['hostname'] ?? '')) ||
+    !in_array((string) ($verification['hostname'] ?? ''), $expectedHostnames, true) ||
     !hash_equals('contact', (string) ($verification['action'] ?? ''))
 ) {
     redirectWithStatus('error');
