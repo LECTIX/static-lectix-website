@@ -1,32 +1,55 @@
----
-const posthogKey = import.meta.env.PUBLIC_POSTHOG_KEY;
----
+<script>
+  import posthog from "posthog-js/dist/module.slim";
+  import { POSTHOG_API_HOST, POSTHOG_PRODUCTION_HOSTNAMES, POSTHOG_PROJECT_TOKEN } from "../config/posthog";
 
-{
-  posthogKey && (
-    <script>
-      import posthog from "posthog-js";
+  const privacyNavigator = navigator as Navigator & { globalPrivacyControl?: boolean };
+  const isProductionWebsite = POSTHOG_PRODUCTION_HOSTNAMES.has(window.location.hostname);
+  const allowsAudienceMeasurement = navigator.doNotTrack !== "1" && privacyNavigator.globalPrivacyControl !== true;
 
-      const key = import.meta.env.PUBLIC_POSTHOG_KEY;
+  if (POSTHOG_PROJECT_TOKEN && isProductionWebsite && allowsAudienceMeasurement) {
+    posthog.init(POSTHOG_PROJECT_TOKEN, {
+      api_host: POSTHOG_API_HOST,
+      ui_host: "https://eu.posthog.com",
+      defaults: "2026-05-30",
+      cookieless_mode: "always",
+      person_profiles: "never",
+      autocapture: false,
+      rageclick: false,
+      capture_pageview: true,
+      capture_pageleave: false,
+      capture_dead_clicks: false,
+      capture_exceptions: false,
+      capture_heatmaps: false,
+      capture_performance: false,
+      disable_session_recording: true,
+      disable_surveys: true,
+      disable_product_tours: true,
+      disable_web_experiments: true,
+      disable_conversations: true,
+      advanced_disable_flags: true,
+      logs: { captureConsoleLogs: false },
+      opt_in_site_apps: false,
+      respect_dnt: true,
+      before_send: (event) => {
+        if (!event || event.event !== "$pageview") return null;
 
-      if (key && navigator.doNotTrack !== "1") {
-        posthog.init(key, {
-          api_host: "https://eu.i.posthog.com",
-          cookieless_mode: "always",
-          autocapture: false,
-          capture_pageview: true,
-          capture_pageleave: false,
-          capture_dead_clicks: false,
-          capture_exceptions: false,
-          capture_heatmaps: false,
-          capture_performance: false,
-          disable_session_recording: true,
-          disable_surveys: true,
-          advanced_disable_flags: true,
-          person_profiles: "identified_only",
-          respect_dnt: true,
-        });
-      }
-    </script>
-  )
-}
+        const properties = { ...event.properties };
+
+        for (const property of ["$current_url", "$referrer"] as const) {
+          const value = properties[property];
+
+          if (typeof value !== "string" || value === "") continue;
+
+          try {
+            const url = new URL(value);
+            properties[property] = `${url.origin}${url.pathname}`;
+          } catch {
+            delete properties[property];
+          }
+        }
+
+        return { ...event, properties };
+      },
+    });
+  }
+</script>
