@@ -1,0 +1,42 @@
+Options -Indexes
+DirectoryIndex index.html
+
+RewriteEngine On
+
+# Anciennes pages principales
+Redirect 301 /store/ /produits/
+Redirect 301 /boutique/ /produits/
+Redirect 301 /the-end/ /a-propos/
+Redirect 301 /contact-us/ /contact/
+Redirect 301 /delivery/ /a-propos/
+Redirect 301 /retractation/ /a-propos/
+Redirect 301 /conditions-generales/ /informations-legales/
+Redirect 301 /mentions/ /informations-legales/
+Redirect 301 /politique-de-confidentialite/ /informations-legales/
+Redirect 301 /politique-de-cookies-ue/ /informations-legales/
+Redirect 301 /my-account/ /produits/
+Redirect 301 /mon-compte/ /produits/
+Redirect 301 /checkout/ /produits/
+Redirect 301 /cart/ /produits/
+Redirect 301 /panier/ /produits/
+Redirect 301 /merci/ /
+
+# Astro génère des dossiers avec index.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+[^/])$ %{REQUEST_URI}/ [R=301,L]
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header always set Content-Security-Policy "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' https://challenges.cloudflare.com https://eu.i.posthog.com; connect-src 'self' https://challenges.cloudflare.com https://eu.i.posthog.com; frame-src https://challenges.cloudflare.com; font-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+</IfModule>

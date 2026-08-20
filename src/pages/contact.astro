@@ -1,0 +1,76 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageIntro from "../components/PageIntro.astro";
+
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+---
+
+<BaseLayout
+  title="Contact — LECTIX"
+  description="Envoyez un message au sujet des produits, des notices ou des sources LECTIX sans exposer l'adresse destinataire."
+>
+  <PageIntro
+    eyebrow="Contact"
+    title="Une question ou une information à compléter ?"
+    lead="Ce formulaire permet de contacter la personne qui maintient les archives LECTIX. Il ne constitue pas un service après-vente commercial."
+  />
+  <section class="content-section contact-section">
+    <div class="container contact-grid">
+      <div class="contact-aside">
+        <h2>Avant d’écrire</h2>
+        <p>Pour un problème technique reproductible ou une amélioration des fichiers, une issue sur le dépôt GitHub concerné reste souvent le meilleur endroit.</p>
+        <p>L’adresse destinataire n’est jamais publiée dans cette page. Le formulaire est protégé par Cloudflare Turnstile.</p>
+      </div>
+      <form class="contact-form" action="/api/contact.php" method="post">
+        <div class="form-status form-status-success" hidden data-status="sent" tabindex="-1">Merci, votre message a bien été transmis.</div>
+        <div class="form-status form-status-error" hidden data-status="error" tabindex="-1">Le message n’a pas pu être envoyé. Réessayez un peu plus tard.</div>
+        <div class="form-row">
+          <label for="name">Nom</label>
+          <input id="name" name="name" type="text" autocomplete="name" required maxlength="120" />
+        </div>
+        <div class="form-row">
+          <label for="email">Adresse e-mail</label>
+          <input id="email" name="email" type="email" autocomplete="email" required maxlength="190" />
+        </div>
+        <div class="form-row">
+          <label for="subject">Sujet</label>
+          <input id="subject" name="subject" type="text" required maxlength="160" />
+        </div>
+        <div class="form-row">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="8" required maxlength="6000"></textarea>
+        </div>
+        <div class="honeypot" aria-hidden="true">
+          <label for="website">Votre site web</label>
+          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+        <input type="hidden" name="form_started" value="0" data-form-started />
+        {
+          turnstileSiteKey ? (
+            <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-action="contact" data-theme="light" />
+          ) : (
+            <p class="setup-note">Le formulaire sera activé après configuration de la clé Turnstile sur l’environnement Hostinger.</p>
+          )
+        }
+        <button class="button" type="submit" disabled={!turnstileSiteKey}>Envoyer le message</button>
+        <p class="form-privacy">Les informations saisies servent uniquement à répondre à votre message. Elles ne sont pas envoyées à PostHog.</p>
+      </form>
+    </div>
+  </section>
+  {
+    turnstileSiteKey && (
+      <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
+    )
+  }
+  <script>
+    const startedInput = document.querySelector<HTMLInputElement>("[data-form-started]");
+    if (startedInput) startedInput.value = Math.floor(Date.now() / 1000).toString();
+
+    const status = new URLSearchParams(window.location.search).get("status");
+    const statusBox = status ? document.querySelector<HTMLElement>(`[data-status="${status}"]`) : null;
+    if (statusBox) {
+      statusBox.hidden = false;
+      statusBox.focus();
+    }
+  </script>
+</BaseLayout>

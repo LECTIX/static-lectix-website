@@ -1,0 +1,55 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { featuredProducts } from "../data/products";
+import ProductCard from "../components/ProductCard.astro";
+---
+
+<BaseLayout
+  title="LECTIX — Électronique open source pour le modélisme ferroviaire"
+  description="Découvrez les produits électroniques LECTIX pour le modélisme ferroviaire, désormais documentés et publiés en open source."
+>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Conçu en France · documenté pour tous</p>
+        <h1>L’électronique ferroviaire devient <span>open source.</span></h1>
+        <p>
+          LECTIX rassemble des modules électroniques pensés pour automatiser, alimenter et fiabiliser
+          les réseaux miniatures. Retrouvez ici leur documentation et leurs fichiers de conception.
+        </p>
+        <div class="button-row">
+          <a class="button" href="/produits/">Explorer les produits</a>
+          <a class="button secondary" href="/open-source/">Accéder aux sources</a>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <img
+          src="/images/relais-temporise.webp"
+          alt=""
+          width="1200"
+          height="1200"
+          fetchpriority="high"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="product-section" aria-labelledby="produits-phares">
+    <div class="container">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Une base technique à faire vivre</p>
+          <h2 id="produits-phares">Des modules documentés, réparables et adaptables.</h2>
+        </div>
+        <a class="text-link" href="/produits/">Voir tout le catalogue</a>
+      </div>
+      <div class="product-grid">
+        {
+          featuredProducts.map((product) => (
+            <ProductCard product={product} />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>

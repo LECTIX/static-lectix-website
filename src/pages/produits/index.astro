@@ -1,0 +1,28 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageIntro from "../../components/PageIntro.astro";
+import ProductCard from "../../components/ProductCard.astro";
+import { products } from "../../data/products";
+---
+
+<BaseLayout
+  title="Produits électroniques open source — LECTIX"
+  description="Parcourez les premières fiches techniques des produits électroniques LECTIX pour le modélisme ferroviaire."
+>
+  <PageIntro
+    eyebrow="Catalogue technique"
+    title="Les produits LECTIX, désormais documentés pour durer."
+    lead="Cette première version présente trois produits représentatifs. Les autres fiches seront ajoutées au fil de la reprise et de la vérification des anciennes données."
+  />
+  <section class="content-section" aria-labelledby="liste-produits">
+    <div class="container">
+      <div class="catalog-toolbar">
+        <h2 id="liste-produits">Premières fiches disponibles</h2>
+        <p>{products.length} produits documentés</p>
+      </div>
+      <div class="product-grid">
+        {products.map((product) => <ProductCard product={product} />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

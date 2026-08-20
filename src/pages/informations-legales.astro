@@ -1,0 +1,36 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageIntro from "../components/PageIntro.astro";
+---
+
+<BaseLayout
+  title="Informations légales et confidentialité — LECTIX"
+  description="Informations sur l'édition du site LECTIX, son hébergement et les traitements de données limités."
+>
+  <PageIntro
+    eyebrow="Informations légales"
+    title="Un site sobre, sans compte et sans publicité."
+    lead="Cette page sera complétée avec les coordonnées actuelles de l’éditeur avant la mise en production. Les anciennes mentions de la société fermée ne seront pas reprises."
+  />
+  <section class="content-section">
+    <div class="container legal-grid">
+      <article>
+        <h2>Édition et hébergement</h2>
+        <p><strong>Éditeur :</strong> informations à compléter avant publication.</p>
+        <p><strong>Hébergement :</strong> Hostinger International Ltd.</p>
+      </article>
+      <article>
+        <h2>Mesure d’audience</h2>
+        <p>PostHog Cloud EU ne sera activé qu’avec une configuration sans cookie, sans enregistrement de session et limitée aux pages vues. Le signal Do Not Track est respecté.</p>
+      </article>
+      <article>
+        <h2>Formulaire de contact</h2>
+        <p>Les coordonnées et le contenu du message sont utilisés uniquement pour traiter la demande. Turnstile protège le formulaire contre les envois automatisés.</p>
+      </article>
+      <article>
+        <h2>Licences</h2>
+        <p>Les licences des matériels, logiciels et documents sont indiquées dans leurs dépôts respectifs. La présence d’un fichier en ligne ne signifie pas qu’il est libre de toute condition.</p>
+      </article>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,44 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageIntro from "../components/PageIntro.astro";
+import { products } from "../data/products";
+---
+
+<BaseLayout
+  title="Open source — LECTIX"
+  description="Comprendre la démarche open source de LECTIX et retrouver les dépôts des produits électroniques."
+>
+  <PageIntro
+    eyebrow="Partager pour prolonger"
+    title="Des produits ouverts, documentés et modifiables."
+    lead="Les sources matérielles et logicielles de LECTIX ont été publiées afin que les modélistes puissent comprendre les produits, les réparer et les adapter à leurs réseaux."
+  />
+  <section class="content-section">
+    <div class="container two-column-content">
+      <div>
+        <p class="eyebrow">Ce que vous trouverez</p>
+        <h2>De la documentation jusqu’aux fichiers de fabrication.</h2>
+      </div>
+      <div class="prose">
+        <p>Chaque dépôt peut contenir des schémas électroniques, circuits imprimés, nomenclatures, fichiers mécaniques, micrologiciels et notices.</p>
+        <p>Les licences sont précisées dépôt par dépôt. Vérifiez-les avant toute reproduction ou modification, en particulier si vous envisagez une diffusion commerciale.</p>
+        <a class="button" href="https://github.com/LECTIX">Voir l’organisation LECTIX sur GitHub</a>
+      </div>
+    </div>
+  </section>
+  <section class="repository-section">
+    <div class="container">
+      <p class="eyebrow">Dépôts déjà reliés</p>
+      <div class="repository-list">
+        {
+          products.filter((product) => product.sourceRepository).map((product) => (
+            <a class="repository-row" href={product.sourceRepository}>
+              <span><strong>{product.code}</strong> {product.name}</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>

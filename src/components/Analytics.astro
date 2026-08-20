@@ -1,0 +1,32 @@
+---
+const posthogKey = import.meta.env.PUBLIC_POSTHOG_KEY;
+---
+
+{
+  posthogKey && (
+    <script>
+      import posthog from "posthog-js";
+
+      const key = import.meta.env.PUBLIC_POSTHOG_KEY;
+
+      if (key && navigator.doNotTrack !== "1") {
+        posthog.init(key, {
+          api_host: "https://eu.i.posthog.com",
+          cookieless_mode: "always",
+          autocapture: false,
+          capture_pageview: true,
+          capture_pageleave: false,
+          capture_dead_clicks: false,
+          capture_exceptions: false,
+          capture_heatmaps: false,
+          capture_performance: false,
+          disable_session_recording: true,
+          disable_surveys: true,
+          advanced_disable_flags: true,
+          person_profiles: "identified_only",
+          respect_dnt: true,
+        });
+      }
+    </script>
+  )
+}

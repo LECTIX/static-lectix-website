@@ -1,0 +1,70 @@
+---
+import "../styles/global.css";
+import Analytics from "../components/Analytics.astro";
+
+type Props = {
+  title: string;
+  description: string;
+};
+
+const { title, description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const currentPath = Astro.url.pathname;
+const year = new Date().getFullYear();
+
+const isCurrent = (href: string) =>
+  href === "/" ? currentPath === "/" : currentPath.startsWith(href);
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0b2537" />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#contenu">Aller au contenu</a>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="/" aria-label="LECTIX — accueil">
+          <img src="/images/logo-lectix.webp" alt="LECTIX" width="256" height="51" />
+        </a>
+        <nav aria-label="Navigation principale">
+          <a href="/produits/" aria-current={isCurrent("/produits/") || isCurrent("/produit/") ? "page" : undefined}>Produits</a>
+          <a href="/open-source/" aria-current={isCurrent("/open-source/") ? "page" : undefined}>Open source</a>
+          <a href="/a-propos/" aria-current={isCurrent("/a-propos/") ? "page" : undefined}>À propos</a>
+          <a href="/contact/" aria-current={isCurrent("/contact/") ? "page" : undefined}>Contact</a>
+        </nav>
+      </div>
+    </header>
+    <main id="contenu">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div>
+          <img src="/images/logo-lectix.webp" alt="LECTIX" width="192" height="39" />
+          <p>Électronique open source pour le modélisme ferroviaire.</p>
+        </div>
+        <div class="footer-links">
+          <a href="/produits/">Produits</a>
+          <a href="/open-source/">Sources</a>
+          <a href="/contact/">Contact</a>
+          <a href="/informations-legales/">Informations légales</a>
+        </div>
+      </div>
+      <div class="container footer-bottom">© {year} LECTIX · Contenus et matériels publiés selon les licences indiquées dans chaque dépôt.</div>
+    </footer>
+    <Analytics />
+  </body>
+</html>

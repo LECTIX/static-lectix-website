@@ -1,0 +1,64 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { products, type Product } from "../../data/products";
+
+export function getStaticPaths() {
+  return products.map((product) => ({
+    params: { slug: product.slug },
+    props: { product },
+  }));
+}
+
+type Props = {
+  product: Product;
+};
+
+const { product } = Astro.props;
+---
+
+<BaseLayout title={`${product.name} — LECTIX`} description={product.summary}>
+  <section class="product-detail-hero">
+    <div class="container product-detail-grid">
+      <div class="product-detail-copy">
+        <p class="eyebrow">{product.category} · {product.code}</p>
+        <div class="archive-badge">Produit archivé · non commercialisé</div>
+        <h1>{product.name}</h1>
+        <p class="lead">{product.introduction}</p>
+        <div class="button-row">
+          {
+            product.sourceRepository ? (
+              <a class="button" href={product.sourceRepository}>Voir les sources sur GitHub</a>
+            ) : (
+              <a class="button" href="/open-source/">Comprendre la démarche open source</a>
+            )
+          }
+          <a class="button secondary" href="/contact/">Signaler une information manquante</a>
+        </div>
+      </div>
+      <div class="product-detail-image">
+        <img src={product.image} alt={product.imageAlt} width="1200" height="1200" />
+      </div>
+    </div>
+  </section>
+  <section class="content-section">
+    <div class="container two-column-content">
+      <div>
+        <p class="eyebrow">Caractéristiques principales</p>
+        <h2>Une base claire pour utiliser ou adapter le module.</h2>
+      </div>
+      <ul class="feature-list">
+        {product.features.map((feature) => <li>{feature}</li>)}
+      </ul>
+    </div>
+  </section>
+  <section class="notice-panel">
+    <div class="container notice-panel-inner">
+      <div>
+        <p class="eyebrow">Migration en cours</p>
+        <h2>Notices et schémas arrivent dans la prochaine étape.</h2>
+        <p>Les documents seront publiés après comparaison avec les sources historiques et les dépôts GitHub.</p>
+      </div>
+      <a class="text-link" href="/produits/">Retour aux produits</a>
+    </div>
+  </section>
+</BaseLayout>
