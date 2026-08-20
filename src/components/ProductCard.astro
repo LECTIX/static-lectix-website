@@ -17,7 +17,7 @@ const { product } = Astro.props;
       <span>{product.category}</span>
       <span>{product.code}</span>
     </div>
-    <h2><a href={`/produit/${product.slug}/`}>{product.name}</a></h2>
+    <h3><a href={`/produit/${product.slug}/`}>{product.name}</a></h3>
     <p>{product.summary}</p>
     <a class="card-link" href={`/produit/${product.slug}/`}>Voir la fiche du produit <span aria-hidden="true">→</span></a>
   </div>

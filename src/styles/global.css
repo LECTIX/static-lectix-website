@@ -289,6 +289,8 @@ textarea {
 }
 
 .product-card {
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 4px;
@@ -315,6 +317,9 @@ textarea {
 
 
 .product-card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   padding: 22px;
 }
 
@@ -362,6 +367,11 @@ textarea {
   color: var(--blue-dark);
   font-weight: 800;
   text-underline-offset: 4px;
+}
+
+.product-card-body .card-link {
+  margin-top: auto;
+  padding-top: 18px;
 }
 
 .page-intro {
@@ -416,6 +426,71 @@ textarea {
 .catalog-toolbar p {
   margin: 0;
   color: var(--ink-soft);
+}
+
+.catalog-categories {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 64px;
+}
+
+.catalog-categories a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 68px;
+  padding: 14px 18px;
+  border: 2px solid var(--line);
+  border-radius: 4px;
+  color: var(--ink);
+  background: white;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.catalog-categories a:hover,
+.catalog-categories a:focus-visible {
+  border-color: var(--blue);
+  color: var(--blue-dark);
+  background: var(--blue-pale);
+}
+
+.catalog-categories span {
+  display: inline-flex;
+  min-width: 34px;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  margin-left: 12px;
+  color: white;
+  background: var(--blue);
+}
+
+.catalog-group + .catalog-group {
+  margin-top: 72px;
+  padding-top: 70px;
+  border-top: 1px solid var(--line);
+}
+
+.catalog-group-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.catalog-group-heading h2 {
+  margin: 0;
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+}
+
+.catalog-group-heading a {
+  color: var(--blue-dark);
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-underline-offset: 4px;
 }
 
 .product-detail-hero {
@@ -531,6 +606,11 @@ textarea {
   border: 1px solid #cadde7;
   border-radius: 4px;
   background: white;
+}
+
+.repository-heading {
+  margin: 0 0 28px;
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
 }
 
 .repository-row {
@@ -831,6 +911,7 @@ textarea {
 
   .hero-grid,
   .product-grid,
+  .catalog-categories,
   .help-grid,
   .product-detail-grid,
   .two-column-content,
@@ -875,6 +956,12 @@ textarea {
 
   .hero {
     padding-top: 58px;
+  }
+
+  .catalog-toolbar,
+  .catalog-group-heading {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
 

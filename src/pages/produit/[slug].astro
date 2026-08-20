@@ -29,7 +29,7 @@ const { product } = Astro.props;
             product.sourceRepository ? (
               <a class="button" href={product.sourceRepository}>Voir les fichiers open source</a>
             ) : (
-              <a class="button" href="/open-source/">Voir les documents disponibles</a>
+              <a class="button" href="/produits/">Voir les autres produits</a>
             )
           }
           <a class="button secondary" href="/contact/">Poser une question</a>
@@ -53,11 +53,21 @@ const { product } = Astro.props;
   </section>
   <section class="notice-panel">
     <div class="container notice-panel-inner">
-      <div>
-        <p class="eyebrow">Documents en cours de préparation</p>
-        <h2>Les notices et les schémas seront ajoutés prochainement.</h2>
-        <p>Chaque document est vérifié avant sa mise en ligne afin d’éviter les erreurs et les mauvaises versions.</p>
-      </div>
+      {
+        product.sourceRepository ? (
+          <div>
+            <p class="eyebrow">Fichiers open source</p>
+            <h2>Les fichiers de ce produit sont disponibles sur GitHub.</h2>
+            <p>Vous pouvez y trouver, selon le produit, les plans, la liste des composants, les fichiers de fabrication ou le programme.</p>
+          </div>
+        ) : (
+          <div>
+            <p class="eyebrow">Fiche d’archive</p>
+            <h2>Aucun dossier open source n’a encore été identifié pour ce produit.</h2>
+            <p>La fiche reste en ligne pour conserver la référence et les principales caractéristiques du produit.</p>
+          </div>
+        )
+      }
       <a class="text-link" href="/produits/">Retour aux produits</a>
     </div>
   </section>

@@ -2,6 +2,8 @@
 
 Première implémentation du site public qui remplacera le WordPress de `lectix.fr`.
 
+Le catalogue statique contient les 18 références françaises de l’ancien site, classées en trois familles. Les prix, le stock, le panier et les avis clients ne sont pas repris. Chaque fiche conserve le visuel principal, les informations utiles et un lien direct vers le dépôt open source lorsqu’il existe.
+
 ## Développement
 
 ```sh
