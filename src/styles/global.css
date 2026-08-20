@@ -771,9 +771,9 @@ textarea {
 
 .site-footer img {
   width: 150px;
-  padding: 8px;
-  border-radius: 5px;
-  background: white;
+  padding: 0;
+  background: transparent;
+  filter: brightness(0) invert(1);
 }
 
 .site-footer p {
