@@ -1,0 +1,19 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Astro / Node.js
+node_modules/
+dist/
+.astro/
+coverage/
+*.log
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example

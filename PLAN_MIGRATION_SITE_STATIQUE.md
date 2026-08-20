@@ -59,6 +59,7 @@ La navigation principale actuelle contient : Open source, Boutique, Mon compte e
 - Produits ;
 - Open source ;
 - À propos ;
+- Contact ;
 - Informations légales.
 
 La page d'accueil ne comporte pas de `h1` visible et met surtout en avant dix produits, des prix, des avis et des arguments commerciaux devenus obsolètes. Le nouveau message principal doit immédiatement présenter LECTIX comme une marque de produits électroniques open source pour le modélisme ferroviaire, puis renvoyer vers le catalogue et les sources.
@@ -71,7 +72,7 @@ La page d'accueil ne comporte pas de `h1` visible et met surtout en avant dix pr
 | `/the-end/` | Chronologie de la fermeture et mot du fondateur | Reprendre le contenu dans `/a-propos/`, puis rediriger définitivement l'ancienne URL |
 | `/open-source/` | Tutoriel de fabrication, licences et lien GitHub | Conserver et enrichir avec un index des dépôts |
 | `/mentions/` | Informations sur l'ancienne société et l'hébergeur | Remplacer par des informations actuelles uniquement ; retirer les données de la société fermée |
-| `/contact-us/` | Formulaire actuellement défaillant et adresse e-mail | Remplacer par une page sans formulaire ou rediriger vers la contribution GitHub |
+| `/contact-us/` | Formulaire actuellement défaillant et adresse e-mail | Remplacer par `/contact/`, sans exposer l'adresse destinataire dans le HTML |
 | `/delivery/` | Tarifs, délais, retours et garantie de la boutique | Supprimer et rediriger vers `/a-propos/` |
 | `/conditions-generales/` | CGV de la boutique, 26 sections | Supprimer du site public et rediriger vers les informations légales actuelles |
 | `/retractation/` | Formulaire de rétractation | Supprimer et rediriger vers `/a-propos/` |
@@ -139,6 +140,50 @@ La première version sera **uniquement en français**. Les contenus multilingues
 3. l'architecture de contenu conservera un champ de langue afin de permettre une extension ultérieure sans refonte ;
 4. anglais, allemand, espagnol et italien ne seront ajoutés que si le trafic et la maintenance future le justifient.
 
+### 3.6 Contact et protection contre les robots
+
+Une adresse encodée dans le HTML ou reconstruite en JavaScript reste récupérable par des robots suffisamment simples ; un lien `mailto:` obfusqué ne constitue donc pas une protection durable. La solution recommandée est un **formulaire de contact dont l'adresse destinataire n'est connue que du serveur**.
+
+Architecture proposée :
+
+```text
+/contact/ (page Astro statique)
+        │
+        ├── Cloudflare Turnstile (widget anti-bot)
+        │
+        └── POST /api/contact.php (Hostinger)
+                    │
+                    ├── validation et limitation de débit
+                    └── PHPMailer → SMTP authentifié → boîte LECTIX
+```
+
+Le site restera statique à l'exception de ce petit endpoint PHP isolé. Cette option évite un abonnement à un service de formulaires tiers et conserve le traitement principal chez Hostinger.
+
+Protections à mettre en œuvre :
+
+- ne jamais inclure l'adresse destinataire dans le HTML, le JavaScript ou le dépôt ;
+- utiliser une boîte ou un alias dédié et un expéditeur fixe du domaine LECTIX ;
+- placer l'adresse du visiteur dans `Reply-To`, jamais directement dans l'en-tête `From` ;
+- envoyer par SMTP authentifié avec PHPMailer, et non avec `mail()` ;
+- stocker identifiants SMTP et secret Turnstile hors de la racine publique ou dans les variables d'environnement Hostinger ;
+- valider le jeton Turnstile côté serveur, ainsi que le nom d'hôte et l'action attendus ;
+- refuser toute requête non `POST`, hors origine autorisée ou dépassant la taille maximale ;
+- valider et borner chaque champ, supprimer les retours de ligne d'en-tête et échapper le contenu ;
+- ajouter un champ honeypot et un temps minimal de remplissage ;
+- limiter le nombre d'envois par source avec un identifiant IP haché à courte durée de vie, sans journaliser l'adresse IP brute ;
+- ne conserver ni le corps du message ni l'e-mail du visiteur dans les logs applicatifs ;
+- afficher des réponses génériques afin de ne révéler ni l'adresse réelle ni les détails SMTP ;
+- ajouter les domaines Turnstile nécessaires à la Content Security Policy ;
+- tester les succès, échecs, expirations, rejeux de jeton et limites de débit avec les clés de test officielles.
+
+Cloudflare indique que Turnstile fonctionne sur n'importe quel site, sans que le trafic passe par son réseau, mais exige une validation du jeton côté serveur. Hostinger prend en charge PHP, Composer et SMTP et recommande PHPMailer avec SMTP plutôt que l'envoi PHP non authentifié. La disponibilité exacte de PHP, SSH/Composer et du service e-mail devra être vérifiée sur le forfait Hostinger utilisé avant l'implémentation. Sources : [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/get-started/), [tests Turnstile](https://developers.cloudflare.com/turnstile/troubleshooting/testing/), [intégration e-mail Hostinger](https://support.hostinger.com/en/articles/1583505-how-to-integrate-hostinger-email-into-your-website), [SMTP Hostinger](https://support.hostinger.com/en/articles/1575756-how-to-get-email-account-configuration-details-for-hostinger-email), [Composer chez Hostinger](https://support.hostinger.com/en/articles/5792078-how-to-use-composer).
+
+Solutions de repli, par ordre de préférence :
+
+1. endpoint PHP + SMTP + Turnstile chez Hostinger ;
+2. service de formulaire tiers avec anti-spam, si le forfait ne permet pas l'endpoint recommandé ;
+3. adresse obfusquée ou lien `mailto:`, uniquement en dernier recours car cette protection est contournable.
+
 ## 4. Architecture d'information cible
 
 ```text
@@ -150,6 +195,7 @@ La première version sera **uniquement en français**. Les contenus multilingues
 │   └── [slug]/                       18 URL historiques françaises conservées
 ├── open-source/                      licences, tutoriel et index des dépôts
 ├── a-propos/                         histoire de LECTIX et ancien contenu de The end
+├── contact/                          formulaire protégé, sans adresse publique
 ├── informations-legales/             informations actuelles, confidentialité et éditeur
 └── 404.html
 ```
@@ -203,6 +249,7 @@ src/
 │   ├── produits/index.astro
 │   ├── produit/[slug].astro
 │   ├── open-source.astro
+│   ├── contact.astro
 │   └── a-propos.astro
 └── styles/
 public/
@@ -216,6 +263,8 @@ scripts/
 ├── import-erp.mjs
 ├── build-asset-manifest.mjs
 └── check-legacy-urls.mjs
+server/
+└── contact.php                       endpoint Hostinger déployé séparément
 ```
 
 ### Schéma de données produit
@@ -290,7 +339,7 @@ Le fichier `.htaccess` final doit être généré à partir d'une table de redir
 |---|---|
 | `/store/`, `/boutique/` | `/produits/` |
 | `/the-end/` | `/a-propos/` |
-| `/contact-us/` | `/open-source/#contribuer` ou une page de contact statique |
+| `/contact-us/`, `/contact-us/?lang=en` | `/contact/` |
 | `/delivery/`, `/retractation/` | `/a-propos/` |
 | `/conditions-generales/` | `/informations-legales/` |
 | `/politique-de-confidentialite/`, `/politique-de-cookies-ue/` | `/informations-legales/` |
@@ -408,6 +457,8 @@ Règles complémentaires :
 - décrire PostHog, la finalité, les données envoyées, l'hébergement européen et la durée de conservation dans `/informations-legales/` ;
 - vérifier les obligations juridiques applicables avant la mise en production : le mode sans cookie réduit la collecte, mais ne dispense pas le propriétaire du site de documenter le traitement.
 
+La page d'informations légales devra aussi documenter Turnstile comme mesure de sécurité du formulaire de contact, ainsi que le traitement et la durée de conservation des messages reçus. Aucun contenu du formulaire ne devra être envoyé à PostHog.
+
 La documentation officielle PostHog confirme que le mode `cookieless_mode: "always"` n'utilise ni cookie, ni session storage, ni local storage, et que l'instance Cloud EU est hébergée à Francfort. Sources : [configuration JavaScript](https://posthog.com/docs/libraries/js/config), [Web Analytics](https://posthog.com/docs/web-analytics), [confidentialité](https://posthog.com/docs/privacy).
 
 ## 9. Lots de réalisation
@@ -419,6 +470,8 @@ La documentation officielle PostHog confirme que le mode `cookieless_mode: "alwa
 - configurer formatage, lint, build et prévisualisation de branche ;
 - ajouter `robots.txt`, sitemap, `.htaccess` et configuration Hostinger ;
 - créer le dossier Hostinger indépendant et une URL de préproduction.
+- vérifier que le forfait Hostinger retenu permet PHP, SMTP authentifié et, idéalement, Composer ;
+- préparer une méthode de déploiement des secrets qui les maintient hors du dépôt et de la racine publique.
 
 **Critère de sortie :** une page d'accueil, une page de contenu et une fiche produit factice sont générées sans JavaScript inutile.
 
@@ -439,6 +492,7 @@ La documentation officielle PostHog confirme que le mode `cookieless_mode: "alwa
 - finaliser le modèle produit, les galeries, téléchargements et produits liés ;
 - créer `/a-propos/` à partir du contenu pertinent de `/the-end/` ;
 - reprendre `/open-source/` et réécrire les informations légales sans données obsolètes de l'ancienne société ;
+- créer `/contact/` et l'endpoint PHP isolé, avec PHPMailer, SMTP authentifié, Turnstile, honeypot et limitation de débit ;
 - intégrer PostHog dans un composant isolé avec la configuration minimale définie ci-dessus ;
 - rendre le site entièrement responsive.
 
@@ -460,6 +514,7 @@ La documentation officielle PostHog confirme que le mode `cookieless_mode: "alwa
 - lancer Lighthouse sur accueil, catalogue, fiche produit et page éditoriale ;
 - vérifier toutes les notices et tous les dépôts GitHub ;
 - tester le dossier Hostinger de préproduction, PostHog et les redirections ;
+- tester l'envoi du formulaire, la délivrabilité, les rejets anti-abus et l'absence d'adresse destinataire ou de secret dans le build ;
 - sauvegarder le WordPress, faire pointer le domaine vers le nouveau dossier, puis surveiller les 404 et les pages vues.
 
 **Critère de sortie :** zéro lien interne cassé, zéro média manquant, build reproductible et score Lighthouse cible supérieur à 90 dans les quatre catégories principales.
@@ -491,10 +546,12 @@ Le contrôle `check:legacy-urls` doit lire l'inventaire versionné et confirmer 
 6. **Hébergement :** Hostinger, dans un dossier indépendant du WordPress.
 7. **Mesure d'audience :** PostHog Cloud EU en configuration minimale et sans cookie.
 8. **Identité visuelle :** conserver la charte LECTIX actuelle, en l'adaptant aux composants du site statique.
+9. **Contact :** proposer un formulaire protégé qui transmet les messages par un endpoint PHP Hostinger, sans publier l'adresse destinataire.
 
-### Décision restant à confirmer
+### Vérification technique restante
 
-- **Contact :** aucun contact, adresse e-mail générique, ou orientation vers les issues GitHub.
+- confirmer que le forfait Hostinger choisi fournit PHP, SMTP authentifié et les moyens de garder les secrets hors de la racine publique ; si Composer n'est pas disponible, PHPMailer pourra être préparé lors du build et déployé avec l'endpoint ;
+- créer ou choisir la boîte ou l'alias LECTIX qui recevra les messages, sans inscrire son adresse dans le dépôt.
 
 ## 12. Définition de « terminé »
 
@@ -505,17 +562,18 @@ La migration pourra être considérée comme terminée lorsque :
 - aucune fonction d'achat ou promesse de support n'est encore présentée comme active ;
 - les 88 URL du sitemap historique ont un comportement défini et testé ;
 - les données personnelles et fichiers opérationnels sont absents du dépôt et du build ;
-- le site fonctionne sans base de données, PHP, WordPress ou ERP ;
+- le site public fonctionne sans base de données, WordPress ni ERP ; le seul traitement serveur est l'endpoint PHP isolé du formulaire ;
 - le build peut être régénéré depuis GitHub et déployé dans le dossier Hostinger indépendant ;
 - PostHog ne collecte que les pages vues prévues, sans autocapture ni enregistrement de session ;
+- le formulaire transmet correctement les messages sans exposer l'adresse destinataire, et résiste aux scénarios anti-abus testés ;
 - une sauvegarde du WordPress est conservée hors du dépôt public avant sa mise hors ligne.
 
 ## 13. Ordre recommandé des prochains travaux
 
-1. confirmer uniquement le mode de contact ;
+1. vérifier les capacités PHP, SMTP et de gestion des secrets du forfait Hostinger ;
 2. créer le socle Astro et le schéma de contenu ;
 3. écrire l'importeur sur deux produits représentatifs : LEC000042 (fiche complexe) et LEC030001 (description absente du WordPress) ;
 4. faire valider le rendu de ces deux fiches ;
 5. migrer les 16 autres produits ;
-6. construire l'accueil, À propos, les pages éditoriales, PostHog, les redirections et la préproduction Hostinger ;
+6. construire l'accueil, À propos, le formulaire de contact, les pages éditoriales, PostHog, les redirections et la préproduction Hostinger ;
 7. effectuer la recette complète avant la bascule de `lectix.fr`.
