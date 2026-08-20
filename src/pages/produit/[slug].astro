@@ -21,19 +21,15 @@ const { product } = Astro.props;
     <div class="container product-detail-grid">
       <div class="product-detail-copy">
         <p class="eyebrow">{product.category} · {product.code}</p>
-        <div class="archive-badge">Ce produit n’est plus vendu</div>
         <h1>{product.name}</h1>
         <p class="lead">{product.introduction}</p>
-        <div class="button-row">
-          {
-            product.sourceRepository ? (
+        {
+          product.sourceRepository && (
+            <div class="button-row">
               <a class="button" href={product.sourceRepository}>Voir les fichiers open source</a>
-            ) : (
-              <a class="button" href="/produits/">Voir les autres produits</a>
-            )
-          }
-          <a class="button secondary" href="/contact/">Poser une question</a>
-        </div>
+            </div>
+          )
+        }
       </div>
       <div class="product-detail-image">
         <img src={product.image} alt={product.imageAlt} width="1200" height="1200" />
@@ -44,31 +40,69 @@ const { product } = Astro.props;
     <div class="container two-column-content">
       <div>
         <p class="eyebrow">Caractéristiques</p>
-        <h2>Ce que fait ce module</h2>
+        <h2>Les points importants</h2>
       </div>
       <ul class="feature-list">
         {product.features.map((feature) => <li>{feature}</li>)}
       </ul>
     </div>
   </section>
-  <section class="notice-panel">
-    <div class="container notice-panel-inner">
-      {
-        product.sourceRepository ? (
-          <div>
-            <p class="eyebrow">Fichiers open source</p>
-            <h2>Les fichiers de ce produit sont disponibles sur GitHub.</h2>
-            <p>Vous pouvez y trouver, selon le produit, les plans, la liste des composants, les fichiers de fabrication ou le programme.</p>
-          </div>
-        ) : (
-          <div>
-            <p class="eyebrow">Fiche d’archive</p>
-            <h2>Aucun dossier open source n’a encore été identifié pour ce produit.</h2>
-            <p>La fiche reste en ligne pour conserver la référence et les principales caractéristiques du produit.</p>
-          </div>
-        )
-      }
-      <a class="text-link" href="/produits/">Retour aux produits</a>
+  <section class="product-guide-section" aria-labelledby="guide-produit">
+    <div class="narrow">
+      <p class="eyebrow">Description détaillée</p>
+      <h2 id="guide-produit">Comprendre et utiliser ce produit</h2>
+      <div class="product-guide-list">
+        {
+          product.details.map((section) => (
+            <article class="product-guide-block">
+              <h3>{section.title}</h3>
+              {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+              {
+                section.bullets && (
+                  <ul>
+                    {section.bullets.map((item) => <li>{item}</li>)}
+                  </ul>
+                )
+              }
+              {section.warning && <p class="product-warning"><strong>À retenir :</strong> {section.warning}</p>}
+            </article>
+          ))
+        }
+      </div>
     </div>
   </section>
+  {
+    product.gallery.length > 0 && (
+      <section class="product-gallery-section" aria-labelledby="illustrations-produit">
+        <div class="container">
+          <p class="eyebrow">Schémas et exemples</p>
+          <h2 id="illustrations-produit">Voir le produit en situation</h2>
+          <div class="product-gallery">
+            {product.gallery.map((image) => (
+              <figure>
+                <a href={image.src} aria-label={`${image.caption} — ouvrir l’image en grand`}>
+                  <img src={image.src} alt={image.alt} loading="lazy" />
+                </a>
+                <figcaption>{image.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+  {
+    product.sourceRepository && (
+      <section class="notice-panel">
+        <div class="container notice-panel-inner">
+          <div>
+            <p class="eyebrow">Pour aller plus loin</p>
+            <h2>Plans et fichiers de fabrication</h2>
+            <p>Le dossier GitHub rassemble les fichiers techniques disponibles pour comprendre, réparer ou refaire ce produit.</p>
+          </div>
+          <a class="button" href={product.sourceRepository}>Ouvrir le dossier GitHub</a>
+        </div>
+      </section>
+    )
+  }
 </BaseLayout>

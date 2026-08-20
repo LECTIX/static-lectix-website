@@ -7,7 +7,7 @@
 Le futur site ne doit pas être une copie statique de la boutique WooCommerce. Il doit devenir le **site de référence de la marque open source LECTIX** et une archive documentaire durable de ses produits, centrée sur quatre besoins :
 
 1. présenter LECTIX comme une marque de produits électroniques open source pour le modélisme ferroviaire ;
-2. permettre de retrouver les 18 produits et leurs usages ;
+2. permettre de retrouver les 16 produits électroniques open source conservés et leurs usages ;
 3. conserver notices, schémas, médias et liens vers les sources ouvertes ;
 4. raconter l'histoire du projet dans une page À propos et préserver les URL utiles afin de ne pas casser les liens existants.
 
@@ -84,7 +84,7 @@ La page d'accueil ne comporte pas de `h1` visible et met surtout en avant dix pr
 
 ### 3.3 Catalogue produit
 
-Les 18 produits français doivent tous être conservés comme fiches d'archive. Les prix, promotions, stock, panier et formulaire d'avis ne doivent pas être repris. Chaque fiche doit afficher un bandeau explicite : **« Produit archivé — n'est plus commercialisé par LECTIX »**.
+Les 18 produits français de l’ancien catalogue ont été inventoriés. Les 16 produits électroniques open source sont conservés ; les lots de boutons poussoirs LEC200014R et LEC200014B, achetés pour être revendus et sans dossier de conception LECTIX, sont exclus. Les prix, promotions, stock, panier et formulaire d'avis ne doivent pas être repris. L’information sur l’arrêt des ventes est regroupée dans la FAQ de la page Contact plutôt que répétée sur chaque fiche.
 
 | Code | Produit / URL française actuelle | Source ouverte à relier | État du contenu |
 |---|---|---|---|
@@ -99,8 +99,8 @@ Les 18 produits français doivent tous être conservés comme fiches d'archive. 
 | LEC030001 | `/produit/bornier-de-distribution-secable/` | `LECTIX/LEC030001-Bornier-de-distribution-secable-2-x-8-plots` | Description absente du rendu WordPress, disponible dans l'ERP |
 | LEC011001 | `/produit/relais-temporise/` | `LECTIX/LEC011001-Relais-Temporise-3min30` | Description ERP riche, notice et 5 schémas |
 | LEC001021 | `/produit/module-de-freinage-dcc-3a/` | `LECTIX/LEC001021-Module-de-freinage-DCC-3A` | Description riche, notices multilingues, schémas et vidéo |
-| LEC200014R | `/produit/lec200014r/` | Pas de dépôt produit identifié | Description courte ; accessoire générique |
-| LEC200014B | `/produit/lec200014b/` | Pas de dépôt produit identifié | Description courte ; accessoire générique |
+| LEC200014R | `/produit/lec200014r/` | Pas de dépôt produit identifié | Exclu de la migration ; accessoire générique acheté pour la revente |
+| LEC200014B | `/produit/lec200014b/` | Pas de dépôt produit identifié | Exclu de la migration ; accessoire générique acheté pour la revente |
 | LEC009002 | `/produit/detecteur-ir/` | `LECTIX/LEC009002-D-tecteur-IR` | Description riche, notice, schémas et GIF |
 | LEC008011 | `/produit/module-sonore-pour-sons-dambiance/` | `LECTIX/LEC008011---Module-sonore-pour-sons-d-ambiance` | Description WordPress, notice et liste de 14 sons |
 | LEC001020 | `/produit/module-de-freinage-dcc/` | `LECTIX/LEC001020-Module-de-freinage-DCC-1A` | HTML ERP ancien/minifié, notices, schémas et vidéo |
@@ -189,10 +189,10 @@ Solutions de repli, par ordre de préférence :
 ```text
 /
 ├── produits/
-│   ├── index                         catalogue des 18 produits
+│   ├── index                         catalogue des 16 produits conservés
 │   └── catégories/                   vues de filtre facultatives
 ├── produit/
-│   └── [slug]/                       18 URL historiques françaises conservées
+│   └── [slug]/                       16 URL historiques françaises conservées
 ├── open-source/                      licences, tutoriel et index des dépôts
 ├── a-propos/                         histoire de LECTIX et ancien contenu de The end
 ├── contact/                          formulaire protégé, sans adresse publique
@@ -557,7 +557,7 @@ Le contrôle `check:legacy-urls` doit lire l'inventaire versionné et confirmer 
 
 La migration pourra être considérée comme terminée lorsque :
 
-- les 18 produits disposent d'une fiche complète et relue ;
+- les 16 produits conservés disposent d'une fiche complète et relue ;
 - notices, schémas et dépôts sources sont accessibles ;
 - aucune fonction d'achat ou promesse de support n'est encore présentée comme active ;
 - les 88 URL du sitemap historique ont un comportement défini et testé ;

@@ -1,6 +1,8 @@
+import { productContentByCode, type ProductContent } from "./productDetails";
+
 export type ProductCategory = "Accessoires" | "Analogique" | "Digital DCC";
 
-export type Product = {
+type ProductSeed = {
   slug: string;
   code: string;
   name: string;
@@ -14,7 +16,9 @@ export type Product = {
   featured?: boolean;
 };
 
-export const products: Product[] = [
+export type Product = ProductSeed & ProductContent;
+
+const productSeeds: ProductSeed[] = [
   {
     slug: "relais-temporise-10-min",
     code: "LEC011102",
@@ -220,40 +224,6 @@ export const products: Product[] = [
     ],
   },
   {
-    slug: "lec200014r",
-    code: "LEC200014R",
-    name: "14 boutons poussoirs rouges de 7 mm",
-    category: "Accessoires",
-    summary: "Lot de boutons momentanés rouges pour commander les accessoires du réseau.",
-    image: "/images/boutons-poussoirs-rouges.webp",
-    imageAlt: "Lot de boutons poussoirs rouges LECTIX LEC200014R",
-    introduction:
-      "Ces boutons momentanés ferment le contact uniquement pendant l’appui. Les écrous et les rondelles de fixation sont compris dans le lot.",
-    features: [
-      "Lot de quatorze boutons rouges de 7 mm",
-      "Contact normalement ouvert",
-      "Tension maximale de 50 V continu ou 120 V alternatif",
-      "Courant maximal de 0,5 A en continu et 3 A en pointe",
-    ],
-  },
-  {
-    slug: "lec200014b",
-    code: "LEC200014B",
-    name: "14 boutons poussoirs noirs de 7 mm",
-    category: "Accessoires",
-    summary: "Lot de boutons momentanés noirs pour commander les accessoires du réseau.",
-    image: "/images/boutons-poussoirs-noirs.webp",
-    imageAlt: "Lot de boutons poussoirs noirs LECTIX LEC200014B",
-    introduction:
-      "Ces boutons momentanés ferment le contact uniquement pendant l’appui. Les écrous et les rondelles de fixation sont compris dans le lot.",
-    features: [
-      "Lot de quatorze boutons noirs de 7 mm",
-      "Contact normalement ouvert",
-      "Tension maximale de 50 V continu ou 120 V alternatif",
-      "Courant maximal de 0,5 A en continu et 3 A en pointe",
-    ],
-  },
-  {
     slug: "detecteur-ir",
     code: "LEC009002",
     name: "Détecteur infrarouge",
@@ -344,5 +314,10 @@ export const products: Product[] = [
     ],
   },
 ];
+
+export const products: Product[] = productSeeds.map((product) => ({
+  ...product,
+  ...productContentByCode[product.code],
+}));
 
 export const featuredProducts = products.filter((product) => product.featured);

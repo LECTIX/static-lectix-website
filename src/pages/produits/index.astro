@@ -17,7 +17,7 @@ const categories: Array<{ name: ProductCategory; id: string; label: string }> = 
 >
   <PageIntro
     eyebrow="Les produits LECTIX"
-    title="Retrouvez les 18 produits LECTIX."
+    title={`Retrouvez les ${products.length} produits LECTIX.`}
     lead="Chaque fiche explique simplement à quoi sert le produit et indique ses principales caractéristiques. Lorsqu’ils sont disponibles, les fichiers open source sont accessibles directement depuis la fiche."
   />
   <section class="content-section" aria-labelledby="liste-produits">

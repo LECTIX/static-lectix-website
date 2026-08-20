@@ -2,7 +2,7 @@
 
 Première implémentation du site public qui remplacera le WordPress de `lectix.fr`.
 
-Le catalogue statique contient les 18 références françaises de l’ancien site, classées en trois familles. Les prix, le stock, le panier et les avis clients ne sont pas repris. Chaque fiche conserve le visuel principal, les informations utiles et un lien direct vers le dépôt open source lorsqu’il existe.
+Le catalogue statique contient les 16 produits électroniques open source conservés après la fermeture de LECTIX, classés en trois familles. Les prix, le stock, le panier, les avis clients et les accessoires génériques achetés pour la revente ne sont pas repris. Chaque fiche rassemble les explications, les principaux schémas et un lien direct vers le dépôt open source.
 
 ## Développement
 

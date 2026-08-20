@@ -7,19 +7,50 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 
 <BaseLayout
   title="Contact — LECTIX"
-  description="Utilisez le formulaire pour poser une question au sujet d'un produit ou d'un document LECTIX."
+  description="Consultez les réponses aux questions fréquentes sur les produits LECTIX et signalez une erreur ou un document manquant."
 >
   <PageIntro
     eyebrow="Contact"
-    title="Nous contacter"
-    lead="Vous pouvez utiliser ce formulaire pour poser une question sur une fiche, signaler une erreur ou proposer un document manquant."
+    title="Une question sur LECTIX ?"
+    lead="Les réponses aux demandes les plus fréquentes se trouvent ci-dessous. Le formulaire reste disponible pour signaler une erreur ou proposer un document manquant."
   />
+  <section class="faq-section contact-faq" aria-labelledby="questions-frequentes">
+    <div class="container two-column-content">
+      <div>
+        <p class="eyebrow">Avant de nous écrire</p>
+        <h2 id="questions-frequentes">Les questions les plus courantes</h2>
+      </div>
+      <div class="faq-list">
+        <details open>
+          <summary>Les produits LECTIX sont-ils encore vendus&nbsp;?</summary>
+          <p>Non. La société LECTIX est fermée et ne fabrique plus ces produits. Ce site conserve leurs descriptions et leurs fichiers open source, mais ce n’est plus une boutique.</p>
+        </details>
+        <details>
+          <summary>Comment puis-je me procurer un module&nbsp;?</summary>
+          <p>LECTIX ne dispose plus de stock et ne connaît pas de revendeur officiel. Un ancien module peut parfois être trouvé d’occasion. Pour les produits open source, une autre possibilité consiste à faire fabriquer la carte à partir des fichiers disponibles sur GitHub.</p>
+        </details>
+        <details>
+          <summary>Je ne connais pas l’électronique. Qui peut m’aider à fabriquer une carte&nbsp;?</summary>
+          <p>Un club de modélisme ferroviaire, un fablab ou une personne habituée à l’électronique pourra vous aider à commander le circuit imprimé et à souder les composants. Commencez par lui transmettre le lien GitHub indiqué sur la fiche du produit.</p>
+        </details>
+        <details>
+          <summary>Pouvez-vous réparer mon module ou assurer le service après-vente&nbsp;?</summary>
+          <p>Non. Il n’y a plus de service après-vente commercial ni de garantie en cours. Les descriptions, schémas et fichiers open source présents sur le site peuvent toutefois aider une personne compétente à rechercher une panne.</p>
+        </details>
+        <details>
+          <summary>Où trouver les notices et les fichiers techniques&nbsp;?</summary>
+          <p>Commencez par la fiche du produit : elle présente son fonctionnement et ses principaux schémas. Le bouton « Voir les fichiers open source » conduit ensuite au dossier GitHub qui contient les fichiers techniques disponibles.</p>
+        </details>
+      </div>
+    </div>
+  </section>
   <section class="content-section contact-section">
     <div class="container contact-grid">
       <div class="contact-aside">
-        <h2>À savoir</h2>
-        <p>La société LECTIX est fermée. Il n’y a donc plus de service après-vente commercial ni de garantie en cours.</p>
-        <p>Une réponse pourra toutefois être apportée lorsque cela est possible, notamment pour retrouver une notice ou corriger une information.</p>
+        <p class="eyebrow">Nous écrire</p>
+        <h2>Vous n’avez pas trouvé la réponse&nbsp;?</h2>
+        <p>Utilisez le formulaire pour signaler une erreur sur le site, un lien qui ne fonctionne plus ou un document manquant.</p>
+        <p>Les demandes de disponibilité, d’achat ou de service après-vente ne pourront pas recevoir de réponse différente de celles indiquées dans la FAQ.</p>
         <p>Votre adresse e-mail reste privée. Elle n’apparaît pas sur le site.</p>
       </div>
       <form class="contact-form" action="/api/contact.php" method="post">

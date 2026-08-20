@@ -506,20 +506,6 @@ textarea {
   gap: clamp(44px, 8vw, 100px);
 }
 
-.archive-badge {
-  display: inline-flex;
-  margin-bottom: 20px;
-  padding: 7px 11px;
-  border: 1px solid #d2b55f;
-  border-radius: 4px;
-  color: #5d4a14;
-  background: #fff5d7;
-  font-size: 0.88rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
 .product-detail-image img {
   border: 1px solid var(--line);
   border-radius: 4px;
@@ -567,6 +553,110 @@ textarea {
   width: 12px;
   height: 12px;
   background: var(--blue);
+}
+
+.product-guide-section {
+  padding: clamp(64px, 9vw, 100px) 0;
+  border-top: 1px solid var(--line);
+  background: white;
+}
+
+.product-guide-section > .narrow > h2,
+.product-gallery-section h2 {
+  margin: 0;
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  line-height: 1.18;
+  letter-spacing: -0.025em;
+}
+
+.product-guide-list {
+  display: grid;
+  gap: 48px;
+  margin-top: 52px;
+}
+
+.product-guide-block {
+  padding-bottom: 48px;
+  border-bottom: 1px solid var(--line);
+}
+
+.product-guide-block:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.product-guide-block h3 {
+  margin: 0 0 18px;
+  color: var(--ink);
+  font-size: clamp(1.45rem, 2.5vw, 1.9rem);
+  line-height: 1.25;
+}
+
+.product-guide-block p,
+.product-guide-block li {
+  color: var(--ink-soft);
+  font-size: 1.08rem;
+}
+
+.product-guide-block p {
+  margin: 0 0 16px;
+}
+
+.product-guide-block ul {
+  margin: 20px 0 0;
+  padding-left: 26px;
+}
+
+.product-guide-block li + li {
+  margin-top: 8px;
+}
+
+.product-guide-block .product-warning {
+  margin-top: 24px;
+  padding: 16px 18px;
+  border-left: 5px solid var(--blue);
+  color: var(--ink);
+  background: var(--blue-pale);
+}
+
+.product-gallery-section {
+  padding: clamp(64px, 9vw, 96px) 0;
+  border-top: 1px solid var(--line);
+  background: var(--mist);
+}
+
+.product-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 38px;
+}
+
+.product-gallery figure {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: white;
+}
+
+.product-gallery a {
+  display: grid;
+  min-height: 330px;
+  place-items: center;
+  padding: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.product-gallery img {
+  width: 100%;
+  max-height: 390px;
+  object-fit: contain;
+}
+
+.product-gallery figcaption {
+  padding: 16px 18px;
+  color: var(--ink-soft);
+  font-weight: 700;
 }
 
 .notice-panel,
@@ -723,7 +813,12 @@ textarea {
 }
 
 .contact-section {
+  border-top: 1px solid var(--line);
   background: var(--mist);
+}
+
+.contact-faq {
+  background: white;
 }
 
 .contact-grid {
@@ -912,6 +1007,7 @@ textarea {
   .hero-grid,
   .product-grid,
   .catalog-categories,
+  .product-gallery,
   .help-grid,
   .product-detail-grid,
   .two-column-content,
