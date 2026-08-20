@@ -558,6 +558,41 @@ textarea {
   font-family: "Roboto Mono", "SFMono-Regular", Consolas, monospace;
 }
 
+.faq-section {
+  padding: clamp(58px, 8vw, 88px) 0;
+  background: white;
+}
+
+.faq-list {
+  display: grid;
+  gap: 14px;
+}
+
+.faq-list details {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: white;
+}
+
+.faq-list summary {
+  padding: 18px 20px;
+  color: var(--ink);
+  font-size: 1.08rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.faq-list details[open] summary {
+  border-bottom: 1px solid var(--line);
+  color: var(--blue-dark);
+}
+
+.faq-list details p {
+  margin: 0;
+  padding: 18px 20px 22px;
+  color: var(--ink-soft);
+}
+
 .story-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

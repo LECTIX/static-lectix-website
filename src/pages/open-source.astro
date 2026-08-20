@@ -5,30 +5,30 @@ import { products } from "../data/products";
 ---
 
 <BaseLayout
-  title="Plans, notices et fichiers à télécharger — LECTIX"
-  description="Téléchargez les plans, notices et fichiers disponibles pour les produits LECTIX."
+  title="Produits électroniques open source — LECTIX"
+  description="Découvrez ce que signifie open source et téléchargez les plans, programmes et documents des produits LECTIX."
 >
   <PageIntro
-    eyebrow="Plans et fichiers"
-    title="Téléchargez les documents des produits LECTIX."
-    lead="Les plans, les listes de composants et les programmes sont disponibles gratuitement. Vous pouvez les consulter pour comprendre un produit, le réparer ou fabriquer votre propre carte."
+    eyebrow="Open source"
+    title="Les produits LECTIX sont open source."
+    lead="Les plans, les listes de composants et les programmes sont publics et disponibles gratuitement. Vous pouvez les consulter pour comprendre un produit, le réparer ou fabriquer votre propre carte."
   />
   <section class="content-section">
     <div class="container two-column-content">
       <div>
-        <p class="eyebrow">Contenu des dossiers</p>
-        <h2>Quels fichiers sont disponibles&nbsp;?</h2>
+        <p class="eyebrow">En pratique</p>
+        <h2>Qu’est-ce que cela change pour vous&nbsp;?</h2>
       </div>
       <div class="prose">
-        <p>Selon le produit, vous trouverez le schéma électronique, le dessin du circuit imprimé, la liste des composants, le programme et la notice.</p>
-        <p>Ces documents sont publiés sur GitHub. GitHub est simplement le site utilisé pour ranger et télécharger les fichiers. Chaque dossier précise ce que vous avez le droit de copier ou de modifier.</p>
-        <a class="button" href="https://github.com/LECTIX">Voir tous les dossiers LECTIX sur GitHub</a>
+        <p>Vous n’êtes pas obligé de dépendre d’un fabricant pour comprendre le fonctionnement du produit. Selon les modèles, vous trouverez le schéma électronique, le dessin du circuit imprimé, la liste des composants, le programme et la notice.</p>
+        <p>Les fichiers sont rangés sur GitHub. Chaque dossier précise ce que vous avez le droit de copier ou de modifier.</p>
+        <a class="button" href="https://github.com/LECTIX">Voir tous les projets open source LECTIX</a>
       </div>
     </div>
   </section>
   <section class="repository-section">
     <div class="container">
-      <p class="eyebrow">Dossiers déjà disponibles</p>
+      <p class="eyebrow">Produits open source déjà disponibles</p>
       <div class="repository-list">
         {
           products.filter((product) => product.sourceRepository).map((product) => (
@@ -38,6 +38,33 @@ import { products } from "../data/products";
             </a>
           ))
         }
+      </div>
+    </div>
+  </section>
+
+  <section class="faq-section" aria-labelledby="faq-open-source">
+    <div class="container two-column-content">
+      <div>
+        <p class="eyebrow">Questions fréquentes</p>
+        <h2 id="faq-open-source">L’open source, simplement</h2>
+      </div>
+      <div class="faq-list">
+        <details>
+          <summary>Que signifie « open source »&nbsp;?</summary>
+          <p>Les documents utilisés pour concevoir le produit sont publiés. Vous pouvez donc voir comment il fonctionne et télécharger les fichiers disponibles.</p>
+        </details>
+        <details>
+          <summary>Faut-il savoir programmer&nbsp;?</summary>
+          <p>Non. Les fiches et les notices restent utiles à tous. Les programmes et les fichiers de fabrication s’adressent seulement aux personnes qui souhaitent aller plus loin.</p>
+        </details>
+        <details>
+          <summary>Où sont rangés les fichiers&nbsp;?</summary>
+          <p>Ils sont hébergés sur GitHub. Les boutons présents sur cette page vous conduisent directement vers le dossier du produit choisi.</p>
+        </details>
+        <details>
+          <summary>Puis-je modifier ou fabriquer une carte&nbsp;?</summary>
+          <p>Oui, lorsque la licence du projet l’autorise. Pensez à lire le fichier de licence présent dans chaque dossier avant de commencer.</p>
+        </details>
       </div>
     </div>
   </section>
