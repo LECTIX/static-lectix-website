@@ -27,11 +27,12 @@ const { product, image } = Astro.props as Illustration;
       <div class="schema-intro">
         <p class="eyebrow">{product.code} · {product.name}</p>
         <h1>{image.caption}</h1>
-        <p>Le schéma complet est affiché ci-dessous. Vous pouvez l’imprimer ou revenir à la fiche du produit.</p>
+        <p>Le schéma complet est affiché ci-dessous. Téléchargez-le pour le conserver ou l’imprimer depuis votre ordinateur.</p>
         <div class="button-row schema-actions">
-          <button class="button" type="button" data-print-schema>Imprimer ce schéma</button>
+          <a class="button" href={image.src} download>Télécharger le schéma</a>
           <a class="button secondary" href={`/produit/${product.slug}/`}>Revenir à la fiche produit</a>
         </div>
+        <p class="schema-print-help">Pour l’imprimer, ouvrez le fichier téléchargé puis choisissez « Imprimer » dans le menu de votre ordinateur.</p>
       </div>
       <figure class="schema-sheet">
         <img src={image.src} alt={image.alt} />
@@ -39,7 +40,4 @@ const { product, image } = Astro.props as Illustration;
       </figure>
     </div>
   </section>
-  <script>
-    document.querySelector("[data-print-schema]")?.addEventListener("click", () => window.print());
-  </script>
 </BaseLayout>

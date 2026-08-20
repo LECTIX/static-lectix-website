@@ -834,6 +834,12 @@ textarea {
   cursor: pointer;
 }
 
+.schema-print-help {
+  margin-top: 16px;
+  color: var(--ink-soft);
+  font-size: 0.98rem;
+}
+
 .schema-sheet {
   margin: 0;
   padding: clamp(18px, 3vw, 36px);
