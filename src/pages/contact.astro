@@ -7,19 +7,20 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 
 <BaseLayout
   title="Contact — LECTIX"
-  description="Envoyez un message au sujet des produits, des notices ou des sources LECTIX sans exposer l'adresse destinataire."
+  description="Utilisez le formulaire pour poser une question au sujet d'un produit ou d'un document LECTIX."
 >
   <PageIntro
     eyebrow="Contact"
-    title="Une question ou une information à compléter ?"
-    lead="Ce formulaire permet de contacter la personne qui maintient les archives LECTIX. Il ne constitue pas un service après-vente commercial."
+    title="Nous contacter"
+    lead="Vous pouvez utiliser ce formulaire pour poser une question sur une fiche, signaler une erreur ou proposer un document manquant."
   />
   <section class="content-section contact-section">
     <div class="container contact-grid">
       <div class="contact-aside">
-        <h2>Avant d’écrire</h2>
-        <p>Pour un problème technique reproductible ou une amélioration des fichiers, une issue sur le dépôt GitHub concerné reste souvent le meilleur endroit.</p>
-        <p>L’adresse destinataire n’est jamais publiée dans cette page. Le formulaire est protégé par Cloudflare Turnstile.</p>
+        <h2>À savoir</h2>
+        <p>La société LECTIX est fermée. Il n’y a donc plus de service après-vente commercial ni de garantie en cours.</p>
+        <p>Une réponse pourra toutefois être apportée lorsque cela est possible, notamment pour retrouver une notice ou corriger une information.</p>
+        <p>Votre adresse e-mail reste privée. Elle n’apparaît pas sur le site.</p>
       </div>
       <form class="contact-form" action="/api/contact.php" method="post">
         <div class="form-status form-status-success" hidden data-status="sent" tabindex="-1">Merci, votre message a bien été transmis.</div>

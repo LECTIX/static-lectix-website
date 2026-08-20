@@ -40,8 +40,9 @@ const isCurrent = (href: string) =>
           <img src="/images/logo-lectix.webp" alt="LECTIX" width="256" height="51" />
         </a>
         <nav aria-label="Navigation principale">
+          <a href="/" aria-current={isCurrent("/") ? "page" : undefined}>Accueil</a>
           <a href="/produits/" aria-current={isCurrent("/produits/") || isCurrent("/produit/") ? "page" : undefined}>Produits</a>
-          <a href="/open-source/" aria-current={isCurrent("/open-source/") ? "page" : undefined}>Open source</a>
+          <a href="/open-source/" aria-current={isCurrent("/open-source/") ? "page" : undefined}>Plans et fichiers</a>
           <a href="/a-propos/" aria-current={isCurrent("/a-propos/") ? "page" : undefined}>À propos</a>
           <a href="/contact/" aria-current={isCurrent("/contact/") ? "page" : undefined}>Contact</a>
         </nav>
@@ -54,11 +55,12 @@ const isCurrent = (href: string) =>
       <div class="container footer-inner">
         <div>
           <img src="/images/logo-lectix.webp" alt="LECTIX" width="192" height="39" />
-          <p>Électronique open source pour le modélisme ferroviaire.</p>
+          <p>Des produits électroniques pour le train miniature.</p>
         </div>
         <div class="footer-links">
+          <a href="/">Accueil</a>
           <a href="/produits/">Produits</a>
-          <a href="/open-source/">Sources</a>
+          <a href="/open-source/">Plans et fichiers</a>
           <a href="/contact/">Contact</a>
           <a href="/informations-legales/">Informations légales</a>
         </div>

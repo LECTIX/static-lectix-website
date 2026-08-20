@@ -5,21 +5,21 @@ import ProductCard from "../components/ProductCard.astro";
 ---
 
 <BaseLayout
-  title="LECTIX — Électronique open source pour le modélisme ferroviaire"
-  description="Découvrez les produits électroniques LECTIX pour le modélisme ferroviaire, désormais documentés et publiés en open source."
+  title="LECTIX — Produits électroniques pour le train miniature"
+  description="Retrouvez les produits électroniques LECTIX, leurs notices, leurs plans et leurs fichiers de fabrication."
 >
   <section class="hero">
     <div class="container hero-grid">
       <div class="hero-copy">
-        <p class="eyebrow">Conçu en France · documenté pour tous</p>
-        <h1>L’électronique ferroviaire devient <span>open source.</span></h1>
+        <p class="eyebrow">Électronique pour le train miniature</p>
+        <h1>Des modules électroniques pour votre <span>réseau miniature</span></h1>
         <p>
-          LECTIX rassemble des modules électroniques pensés pour automatiser, alimenter et fiabiliser
-          les réseaux miniatures. Retrouvez ici leur documentation et leurs fichiers de conception.
+          LECTIX a conçu des cartes simples à utiliser pour alimenter et automatiser les réseaux de trains miniatures.
+          Ce site rassemble les produits, les notices, les plans et les fichiers utiles.
         </p>
         <div class="button-row">
-          <a class="button" href="/produits/">Explorer les produits</a>
-          <a class="button secondary" href="/open-source/">Accéder aux sources</a>
+          <a class="button" href="/produits/">Voir les produits</a>
+          <a class="button secondary" href="/open-source/">Télécharger les plans et fichiers</a>
         </div>
       </div>
       <div class="hero-visual" aria-hidden="true">
@@ -34,14 +34,37 @@ import ProductCard from "../components/ProductCard.astro";
     </div>
   </section>
 
+  <section class="help-section" aria-labelledby="aide-navigation">
+    <div class="container">
+      <h2 id="aide-navigation">Que pouvez-vous trouver sur ce site&nbsp;?</h2>
+      <div class="help-grid">
+        <article>
+          <h3>Les produits LECTIX</h3>
+          <p>Une fiche simple pour chaque produit, avec son rôle et ses principales caractéristiques.</p>
+          <a href="/produits/">Voir les produits</a>
+        </article>
+        <article>
+          <h3>Les notices et les plans</h3>
+          <p>Les documents utiles pour comprendre, réparer ou refaire les cartes électroniques.</p>
+          <a href="/open-source/">Voir les documents disponibles</a>
+        </article>
+        <article>
+          <h3>Un formulaire de contact</h3>
+          <p>Pour poser une question ou signaler une erreur dans une fiche ou un document.</p>
+          <a href="/contact/">Nous contacter</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
   <section class="product-section" aria-labelledby="produits-phares">
     <div class="container">
       <div class="section-heading">
         <div>
-          <p class="eyebrow">Une base technique à faire vivre</p>
-          <h2 id="produits-phares">Des modules documentés, réparables et adaptables.</h2>
+          <p class="eyebrow">Catalogue en cours de remise en ligne</p>
+          <h2 id="produits-phares">Les premières fiches disponibles</h2>
         </div>
-        <a class="text-link" href="/produits/">Voir tout le catalogue</a>
+        <a class="text-link" href="/produits/">Voir la liste des produits</a>
       </div>
       <div class="product-grid">
         {

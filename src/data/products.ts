@@ -17,12 +17,12 @@ export const featuredProducts: Product[] = [
     code: "LEC011102",
     name: "Relais temporisé 10 min",
     category: "Accessoires",
-    summary: "Un relais réglable pour automatiser simplement une action sur le réseau.",
+    summary: "Commande automatiquement un accessoire pendant une durée réglable.",
     image: "/images/relais-temporise.webp",
     imageAlt: "Carte électronique du relais temporisé LECTIX LEC011102",
     sourceRepository: "https://github.com/LECTIX/LEC011102-Relais-Temporise-10min",
     introduction:
-      "Ce module commande un relais après une temporisation réglable. Il convient notamment aux automatismes de réseau, aux éclairages et aux accessoires temporisés.",
+      "Ce module commande un relais pendant une durée réglable. Il peut servir pour un éclairage, un moteur ou un autre accessoire du réseau.",
     features: [
       "Temporisation réglable d'environ 10 secondes à 10 minutes",
       "Relais inverseur accessible sur bornier",
@@ -35,11 +35,11 @@ export const featuredProducts: Product[] = [
     code: "LEC032002",
     name: "Module navette analogique",
     category: "Analogique",
-    summary: "Automatise les allers-retours d'une navette ou d'un funiculaire analogique.",
+    summary: "Fait circuler automatiquement un train entre deux extrémités de voie.",
     image: "/images/module-navette.webp",
     imageAlt: "Module électronique LECTIX pour navette analogique",
     introduction:
-      "Le module va-et-vient automatise la circulation d'un train entre deux extrémités en commande analogique, avec réglages de vitesse, d'accélération et d'arrêt.",
+      "Ce module fait circuler un train entre deux extrémités de voie. La vitesse, le démarrage, le freinage et le temps d'arrêt peuvent être réglés.",
     features: [
       "Fonctionnement autonome pour une voie en navette",
       "Réglage de l'accélération, de la décélération et de la vitesse maximale",
@@ -52,13 +52,13 @@ export const featuredProducts: Product[] = [
     code: "LEC030201",
     name: "Bornier de distribution sécable XL",
     category: "Accessoires",
-    summary: "Distribue proprement l'alimentation avec une carte adaptable à chaque installation.",
+    summary: "Répartit l'alimentation électrique vers plusieurs éléments du réseau.",
     image: "/images/bornier-distribution-xl.webp",
     imageAlt: "Bornier de distribution sécable XL LECTIX",
     sourceRepository:
       "https://github.com/LECTIX/LEC030201-Bornier-de-distribution-secable-XL-2-x-16-plots",
     introduction:
-      "Cette carte distribue deux potentiels sur seize points de raccordement. Elle peut être recoupée pour s'adapter à la place disponible sous le réseau.",
+      "Cette carte permet de raccorder plusieurs fils sur deux lignes électriques. Elle peut être coupée pour prendre moins de place sous le réseau.",
     features: [
       "Deux lignes de distribution indépendantes",
       "Seize points de raccordement",

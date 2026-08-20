@@ -5,30 +5,30 @@ import { products } from "../data/products";
 ---
 
 <BaseLayout
-  title="Open source — LECTIX"
-  description="Comprendre la démarche open source de LECTIX et retrouver les dépôts des produits électroniques."
+  title="Plans, notices et fichiers à télécharger — LECTIX"
+  description="Téléchargez les plans, notices et fichiers disponibles pour les produits LECTIX."
 >
   <PageIntro
-    eyebrow="Partager pour prolonger"
-    title="Des produits ouverts, documentés et modifiables."
-    lead="Les sources matérielles et logicielles de LECTIX ont été publiées afin que les modélistes puissent comprendre les produits, les réparer et les adapter à leurs réseaux."
+    eyebrow="Plans et fichiers"
+    title="Téléchargez les documents des produits LECTIX."
+    lead="Les plans, les listes de composants et les programmes sont disponibles gratuitement. Vous pouvez les consulter pour comprendre un produit, le réparer ou fabriquer votre propre carte."
   />
   <section class="content-section">
     <div class="container two-column-content">
       <div>
-        <p class="eyebrow">Ce que vous trouverez</p>
-        <h2>De la documentation jusqu’aux fichiers de fabrication.</h2>
+        <p class="eyebrow">Contenu des dossiers</p>
+        <h2>Quels fichiers sont disponibles&nbsp;?</h2>
       </div>
       <div class="prose">
-        <p>Chaque dépôt peut contenir des schémas électroniques, circuits imprimés, nomenclatures, fichiers mécaniques, micrologiciels et notices.</p>
-        <p>Les licences sont précisées dépôt par dépôt. Vérifiez-les avant toute reproduction ou modification, en particulier si vous envisagez une diffusion commerciale.</p>
-        <a class="button" href="https://github.com/LECTIX">Voir l’organisation LECTIX sur GitHub</a>
+        <p>Selon le produit, vous trouverez le schéma électronique, le dessin du circuit imprimé, la liste des composants, le programme et la notice.</p>
+        <p>Ces documents sont publiés sur GitHub. GitHub est simplement le site utilisé pour ranger et télécharger les fichiers. Chaque dossier précise ce que vous avez le droit de copier ou de modifier.</p>
+        <a class="button" href="https://github.com/LECTIX">Voir tous les dossiers LECTIX sur GitHub</a>
       </div>
     </div>
   </section>
   <section class="repository-section">
     <div class="container">
-      <p class="eyebrow">Dépôts déjà reliés</p>
+      <p class="eyebrow">Dossiers déjà disponibles</p>
       <div class="repository-list">
         {
           products.filter((product) => product.sourceRepository).map((product) => (
