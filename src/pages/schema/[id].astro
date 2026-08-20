@@ -1,0 +1,51 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { products, type Product } from "../../data/products";
+import type { ProductImage } from "../../data/productDetails";
+
+type Illustration = {
+  id: string;
+  product: Product;
+  image: ProductImage;
+};
+
+export function getStaticPaths() {
+  const getIllustrationId = (code: string, src: string) => {
+    const filename = src.split("/").at(-1)?.replace(/\.[^.]+$/, "") ?? "illustration";
+    const subject = filename.replace(/^lec\d+[a-z]?-/i, "");
+    return `${code.toLowerCase()}-${subject}`;
+  };
+
+  return products.flatMap((product) =>
+    product.gallery.map((image) => ({
+      params: { id: getIllustrationId(product.code, image.src) },
+      props: { id: getIllustrationId(product.code, image.src), product, image },
+    })),
+  );
+}
+
+const { product, image } = Astro.props as Illustration;
+---
+
+<BaseLayout title={`${image.caption} — ${product.name} — LECTIX`} description={image.alt}>
+  <section class="schema-page">
+    <div class="container">
+      <div class="schema-intro">
+        <p class="eyebrow">{product.code} · {product.name}</p>
+        <h1>{image.caption}</h1>
+        <p>Le schéma complet est affiché ci-dessous. Vous pouvez l’imprimer ou revenir à la fiche du produit.</p>
+        <div class="button-row schema-actions">
+          <button class="button" type="button" data-print-schema>Imprimer ce schéma</button>
+          <a class="button secondary" href={`/produit/${product.slug}/`}>Revenir à la fiche produit</a>
+        </div>
+      </div>
+      <figure class="schema-sheet">
+        <img src={image.src} alt={image.alt} />
+        <figcaption>{image.caption}</figcaption>
+      </figure>
+    </div>
+  </section>
+  <script>
+    document.querySelector("[data-print-schema]")?.addEventListener("click", () => window.print());
+  </script>
+</BaseLayout>

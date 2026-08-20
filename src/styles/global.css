@@ -182,6 +182,10 @@ textarea {
   gap: clamp(44px, 7vw, 92px);
 }
 
+.hero-grid-single {
+  grid-template-columns: minmax(0, 860px);
+}
+
 .hero h1 {
   max-width: 800px;
   margin: 0;
@@ -231,7 +235,7 @@ textarea {
 
 .help-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
 }
 
@@ -569,6 +573,13 @@ textarea {
   letter-spacing: -0.025em;
 }
 
+.gallery-instruction {
+  max-width: 780px;
+  margin: 18px 0 0;
+  color: var(--ink-soft);
+  font-size: 1.08rem;
+}
+
 .product-guide-list {
   display: grid;
   gap: 48px;
@@ -645,12 +656,27 @@ textarea {
   place-items: center;
   padding: 20px;
   border-bottom: 1px solid var(--line);
+  color: var(--blue-dark);
+  text-decoration: none;
+}
+
+.product-gallery a:hover,
+.product-gallery a:focus-visible {
+  background: var(--blue-pale);
 }
 
 .product-gallery img {
   width: 100%;
   max-height: 390px;
   object-fit: contain;
+}
+
+.schema-action {
+  justify-self: start;
+  margin-top: 18px;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 .product-gallery figcaption {
@@ -680,6 +706,54 @@ textarea {
 
 .notice-panel p:not(.eyebrow) {
   color: var(--ink-soft);
+}
+
+.schema-page {
+  padding: clamp(52px, 7vw, 82px) 0 90px;
+  background: var(--mist);
+}
+
+.schema-intro {
+  max-width: 900px;
+  margin-bottom: 38px;
+}
+
+.schema-intro h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.15;
+}
+
+.schema-intro > p:not(.eyebrow) {
+  max-width: 760px;
+  color: var(--ink-soft);
+  font-size: 1.1rem;
+}
+
+.schema-actions .button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.schema-sheet {
+  margin: 0;
+  padding: clamp(18px, 3vw, 36px);
+  border: 1px solid var(--line);
+  background: white;
+  box-shadow: var(--shadow);
+}
+
+.schema-sheet img {
+  width: 100%;
+  max-height: none;
+  object-fit: contain;
+}
+
+.schema-sheet figcaption {
+  margin-top: 22px;
+  color: var(--ink-soft);
+  font-weight: 700;
+  text-align: center;
 }
 
 .prose {
@@ -1067,5 +1141,37 @@ textarea {
   *::after {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  @page {
+    margin: 12mm;
+  }
+
+  .site-header,
+  .site-footer,
+  .skip-link,
+  .schema-intro {
+    display: none !important;
+  }
+
+  .schema-page {
+    padding: 0;
+    background: white;
+  }
+
+  .schema-page .container {
+    width: 100%;
+  }
+
+  .schema-sheet {
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .schema-sheet figcaption {
+    margin-top: 8mm;
   }
 }

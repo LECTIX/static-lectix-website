@@ -2,13 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageIntro from "../../components/PageIntro.astro";
 import ProductCard from "../../components/ProductCard.astro";
-import { products, type ProductCategory } from "../../data/products";
-
-const categories: Array<{ name: ProductCategory; id: string; label: string }> = [
-  { name: "Accessoires", id: "accessoires", label: "Accessoires" },
-  { name: "Analogique", id: "analogique", label: "Réseau analogique" },
-  { name: "Digital DCC", id: "digital-dcc", label: "Réseau digital DCC" },
-];
+import { products } from "../../data/products";
 ---
 
 <BaseLayout
@@ -18,37 +12,17 @@ const categories: Array<{ name: ProductCategory; id: string; label: string }> = 
   <PageIntro
     eyebrow="Les produits LECTIX"
     title={`Retrouvez les ${products.length} produits LECTIX.`}
-    lead="Chaque fiche explique simplement à quoi sert le produit et indique ses principales caractéristiques. Lorsqu’ils sont disponibles, les fichiers open source sont accessibles directement depuis la fiche."
+    lead="Les produits sont classés par numéro de référence LEC. Chaque fiche indique les utilisations possibles, les branchements et, lorsqu’elle existe, propose la notice PDF en téléchargement direct."
   />
   <section class="content-section" aria-labelledby="liste-produits">
     <div class="container">
       <div class="catalog-toolbar">
-        <h2 id="liste-produits">Choisissez une famille de produits</h2>
-        <p>{products.length} fiches en ligne</p>
+        <h2 id="liste-produits">Produits classés par référence</h2>
+        <p>De {products[0]?.code} à {products.at(-1)?.code}</p>
       </div>
-      <nav class="catalog-categories" aria-label="Catégories de produits">
-        {
-          categories.map((category) => {
-            const count = products.filter((product) => product.category === category.name).length;
-            return <a href={`#${category.id}`}>{category.label} <span>{count}</span></a>;
-          })
-        }
-      </nav>
-      {
-        categories.map((category) => (
-          <section class="catalog-group" aria-labelledby={category.id}>
-            <div class="catalog-group-heading">
-              <h2 id={category.id}>{category.label}</h2>
-              <a href="#liste-produits">Revenir aux catégories</a>
-            </div>
-            <div class="product-grid">
-              {products
-                .filter((product) => product.category === category.name)
-                .map((product) => <ProductCard product={product} />)}
-            </div>
-          </section>
-        ))
-      }
+      <div class="product-grid">
+        {products.map((product) => <ProductCard product={product} />)}
+      </div>
     </div>
   </section>
 </BaseLayout>

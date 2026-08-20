@@ -11,9 +11,10 @@ type ProductSeed = {
   image: string;
   imageAlt: string;
   sourceRepository?: string;
+  manual?: string;
+  manualPages?: number;
   introduction: string;
   features: string[];
-  featured?: boolean;
 };
 
 export type Product = ProductSeed & ProductContent;
@@ -36,7 +37,6 @@ const productSeeds: ProductSeed[] = [
       "Déclenchement par bouton poussoir, ILS ou autre contact",
       "Réglage simple avec un tournevis",
     ],
-    featured: true,
   },
   {
     slug: "relais-bistable-universel-12v-copie",
@@ -83,6 +83,8 @@ const productSeeds: ProductSeed[] = [
     image: "/images/detecteur-occupation-dcc-3a.webp",
     imageAlt: "Détecteur d’occupation DCC 3 A LECTIX LEC000043",
     sourceRepository: "https://github.com/LECTIX/LEC000043-Detecteur-de-presence-DCC-Analogique-3A",
+    manual: "/notices/LEC000043-notice-fr.pdf",
+    manualPages: 12,
     introduction:
       "Ce module détecte la présence d’un train sur une zone de voie DCC. Son relais peut ensuite commander un feu, un automatisme ou un autre module.",
     features: [
@@ -91,7 +93,6 @@ const productSeeds: ProductSeed[] = [
       "Courant maximal supporté de 3 A",
       "Temporisation à la désactivation et entrée de forçage",
     ],
-    featured: true,
   },
   {
     slug: "led-declairage-interieur-10-pcs",
@@ -121,6 +122,8 @@ const productSeeds: ProductSeed[] = [
     imageAlt: "Module va-et-vient LECTIX pour navette analogique",
     sourceRepository:
       "https://github.com/LECTIX/LEC032002-Module-va-et-vient-pour-navette-en-analogique-ou-funiculaire",
+    manual: "/notices/LEC032002-notice-fr.pdf",
+    manualPages: 6,
     introduction:
       "Ce module fait circuler automatiquement un train analogique ou un funiculaire entre deux extrémités de voie.",
     features: [
@@ -129,7 +132,6 @@ const productSeeds: ProductSeed[] = [
       "Réglage de la vitesse maximale et des courbes de marche",
       "Protection contre les courts-circuits",
     ],
-    featured: true,
   },
   {
     slug: "bornier-de-distribution-secable-2-x-4-plots",
@@ -196,6 +198,8 @@ const productSeeds: ProductSeed[] = [
     image: "/images/relais-temporise-3min30.webp",
     imageAlt: "Relais temporisé LECTIX LEC011001",
     sourceRepository: "https://github.com/LECTIX/LEC011001-Relais-Temporise-3min30",
+    manual: "/notices/LEC011001-notice-fr.pdf",
+    manualPages: 6,
     introduction:
       "Ce module active un relais pendant une durée réglable. Il peut commander un éclairage, une animation ou un autre accessoire.",
     features: [
@@ -214,6 +218,8 @@ const productSeeds: ProductSeed[] = [
     image: "/images/module-freinage-dcc-3a.webp",
     imageAlt: "Module de freinage DCC 3 A LECTIX LEC001021",
     sourceRepository: "https://github.com/LECTIX/LEC001021-Module-de-freinage-DCC-3A",
+    manual: "/notices/LEC001021-notice-fr.pdf",
+    manualPages: 6,
     introduction:
       "Ce module utilise la technologie ABC pour obtenir des ralentissements et des arrêts progressifs sur un réseau DCC.",
     features: [
@@ -232,6 +238,8 @@ const productSeeds: ProductSeed[] = [
     image: "/images/detecteur-ir.webp",
     imageAlt: "Détecteur infrarouge LECTIX LEC009002",
     sourceRepository: "https://github.com/LECTIX/LEC009002-D-tecteur-IR",
+    manual: "/notices/LEC009002-notice-fr.pdf",
+    manualPages: 5,
     introduction:
       "Ce module détecte un objet sans contact grâce à un ou deux capteurs infrarouges. Il peut commander un relais en mode direct ou bistable.",
     features: [
@@ -250,6 +258,8 @@ const productSeeds: ProductSeed[] = [
     image: "/images/module-sonore.webp",
     imageAlt: "Module sonore LECTIX LEC008011 avec haut-parleur",
     sourceRepository: "https://github.com/LECTIX/LEC008011---Module-sonore-pour-sons-d-ambiance",
+    manual: "/notices/LEC008011-notice-fr.pdf",
+    manualPages: 10,
     introduction:
       "Ce module diffuse des klaxons, des bruits d’animaux ou d’autres ambiances sonores. Chaque son se déclenche avec un bouton, un ILS ou un autre contact.",
     features: [
@@ -268,6 +278,8 @@ const productSeeds: ProductSeed[] = [
     image: "/images/module-freinage-dcc-1a.webp",
     imageAlt: "Module de freinage DCC 1 A LECTIX LEC001020",
     sourceRepository: "https://github.com/LECTIX/LEC001020-Module-de-freinage-DCC-1A",
+    manual: "/notices/LEC001020-notice-fr.pdf",
+    manualPages: 6,
     introduction:
       "Ce module utilise la technologie ABC pour obtenir des ralentissements et des arrêts progressifs sur un réseau DCC.",
     features: [
@@ -286,6 +298,8 @@ const productSeeds: ProductSeed[] = [
     image: "/images/detecteur-occupation-analogique.webp",
     imageAlt: "Détecteur d’occupation analogique LECTIX LEC000042A",
     sourceRepository: "https://github.com/LECTIX/LEC000042-Detecteur-de-presence-DCC-Analogique-1A",
+    manual: "/notices/LEC000042A-notice-fr.pdf",
+    manualPages: 6,
     introduction:
       "Ce module détecte la présence d’un train sur une zone de voie analogique. Son relais peut ensuite commander un feu ou un automatisme.",
     features: [
@@ -304,6 +318,8 @@ const productSeeds: ProductSeed[] = [
     image: "/images/detecteur-occupation-dcc-1a.webp",
     imageAlt: "Détecteur d’occupation DCC 1 A LECTIX LEC000042",
     sourceRepository: "https://github.com/LECTIX/LEC000042-Detecteur-de-presence-DCC-Analogique-1A",
+    manual: "/notices/LEC000042-notice-fr.pdf",
+    manualPages: 13,
     introduction:
       "Ce module détecte la présence d’un train sur une zone de voie DCC. Son relais peut ensuite commander un feu, un automatisme ou un autre module.",
     features: [
@@ -318,6 +334,4 @@ const productSeeds: ProductSeed[] = [
 export const products: Product[] = productSeeds.map((product) => ({
   ...product,
   ...productContentByCode[product.code],
-}));
-
-export const featuredProducts = products.filter((product) => product.featured);
+})).sort((first, second) => first.code.localeCompare(second.code, "fr", { numeric: true }));

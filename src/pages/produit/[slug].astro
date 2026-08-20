@@ -14,6 +14,11 @@ type Props = {
 };
 
 const { product } = Astro.props;
+const getIllustrationId = (src: string) => {
+  const filename = src.split("/").at(-1)?.replace(/\.[^.]+$/, "") ?? "illustration";
+  const subject = filename.replace(/^lec\d+[a-z]?-/i, "");
+  return `${product.code.toLowerCase()}-${subject}`;
+};
 ---
 
 <BaseLayout title={`${product.name} — LECTIX`} description={product.summary}>
@@ -23,13 +28,18 @@ const { product } = Astro.props;
         <p class="eyebrow">{product.category} · {product.code}</p>
         <h1>{product.name}</h1>
         <p class="lead">{product.introduction}</p>
-        {
-          product.sourceRepository && (
-            <div class="button-row">
-              <a class="button" href={product.sourceRepository}>Voir les fichiers open source</a>
-            </div>
-          )
-        }
+        <div class="button-row">
+          {product.manual && (
+            <a class="button" href={product.manual} download>
+              Télécharger la notice PDF{product.manualPages ? ` (${product.manualPages} pages)` : ""}
+            </a>
+          )}
+          {product.sourceRepository && (
+            <a class={`button ${product.manual ? "secondary" : ""}`} href={product.sourceRepository}>
+              Accéder aux fichiers techniques
+            </a>
+          )}
+        </div>
       </div>
       <div class="product-detail-image">
         <img src={product.image} alt={product.imageAlt} width="1200" height="1200" />
@@ -50,7 +60,7 @@ const { product } = Astro.props;
   <section class="product-guide-section" aria-labelledby="guide-produit">
     <div class="narrow">
       <p class="eyebrow">Description détaillée</p>
-      <h2 id="guide-produit">Comprendre et utiliser ce produit</h2>
+      <h2 id="guide-produit">Installer et utiliser ce produit</h2>
       <div class="product-guide-list">
         {
           product.details.map((section) => (
@@ -77,11 +87,13 @@ const { product } = Astro.props;
         <div class="container">
           <p class="eyebrow">Schémas et exemples</p>
           <h2 id="illustrations-produit">Voir le produit en situation</h2>
+          <p class="gallery-instruction">Cliquez sur un schéma pour l’ouvrir en grand dans une nouvelle page. Vous pourrez ensuite l’imprimer.</p>
           <div class="product-gallery">
             {product.gallery.map((image) => (
               <figure>
-                <a href={image.src} aria-label={`${image.caption} — ouvrir l’image en grand`}>
+                <a href={`/schema/${getIllustrationId(image.src)}/`} target="_blank" rel="noopener" aria-label={`${image.caption} — ouvrir en grand dans une nouvelle page`}>
                   <img src={image.src} alt={image.alt} loading="lazy" />
+                  <span class="schema-action">Ouvrir en grand et imprimer <span aria-hidden="true">↗</span></span>
                 </a>
                 <figcaption>{image.caption}</figcaption>
               </figure>
@@ -98,7 +110,7 @@ const { product } = Astro.props;
           <div>
             <p class="eyebrow">Pour aller plus loin</p>
             <h2>Plans et fichiers de fabrication</h2>
-            <p>Le dossier GitHub rassemble les fichiers techniques disponibles pour comprendre, réparer ou refaire ce produit.</p>
+            <p>Le dossier GitHub rassemble les fichiers techniques disponibles pour réparer, modifier ou refaire ce produit.</p>
           </div>
           <a class="button" href={product.sourceRepository}>Ouvrir le dossier GitHub</a>
         </div>
