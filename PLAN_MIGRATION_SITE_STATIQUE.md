@@ -1,15 +1,15 @@
 # Plan de migration de lectix.fr vers un site statique
 
-> Audit réalisé le 20 août 2026 à partir du site public, de ses sitemaps et API WordPress, de la sauvegarde locale du site et des gabarits du mini-ERP.
+> Audit réalisé le 20 août 2026 à partir du site public, de ses sitemaps et API WordPress, de la sauvegarde locale du site et des gabarits du mini-ERP. Plan mis à jour avec les décisions de cadrage du propriétaire de LECTIX.
 
 ## 1. Résumé exécutif
 
-Le futur site ne doit pas être une copie statique de la boutique WooCommerce. Il doit devenir une **archive documentaire durable des produits LECTIX**, centrée sur quatre besoins :
+Le futur site ne doit pas être une copie statique de la boutique WooCommerce. Il doit devenir le **site de référence de la marque open source LECTIX** et une archive documentaire durable de ses produits, centrée sur quatre besoins :
 
-1. expliquer clairement la fermeture de LECTIX ;
+1. présenter LECTIX comme une marque de produits électroniques open source pour le modélisme ferroviaire ;
 2. permettre de retrouver les 18 produits et leurs usages ;
 3. conserver notices, schémas, médias et liens vers les sources ouvertes ;
-4. préserver les URL utiles et les redirections afin de ne pas casser les liens existants.
+4. raconter l'histoire du projet dans une page À propos et préserver les URL utiles afin de ne pas casser les liens existants.
 
 L'audit recense **88 URL dans les sitemaps** :
 
@@ -37,9 +37,18 @@ Je recommande **Astro en sortie entièrement statique** (`output: "static"`). As
 
 Hugo ou Eleventy conviendraient également, mais Astro offre ici le meilleur compromis entre simplicité éditoriale, composants réutilisables, validation des données et reprise du HTML existant.
 
-### Hébergement proposé
+### Hébergement retenu : Hostinger
 
-**Cloudflare Pages** est le premier choix pour le déploiement : prévisualisations par branche, certificat TLS, domaine personnalisé et vraies redirections HTTP via un fichier `_redirects`. Ce dernier point est important pour les 88 URL historiques. Un déploiement du dossier `dist/` chez Hostinger reste possible si l'hébergement actuel doit être conservé, à condition de reproduire les règles de redirection dans sa configuration.
+Le site restera chez **Hostinger**. Le build Astro générera un dossier `dist/` qui sera déployé dans un dossier d'hébergement indépendant du WordPress. La stratégie proposée est :
+
+1. créer un nouveau dossier racine dédié au site statique ;
+2. y déployer uniquement le contenu de `dist/`, jamais les sources ni les sauvegardes ;
+3. le tester avec un sous-domaine ou une URL de préproduction ;
+4. configurer les redirections, la page 404 et les en-têtes de cache dans un `.htaccess` versionné ;
+5. faire pointer `lectix.fr` vers ce nouveau dossier après recette ;
+6. conserver temporairement l'ancien dossier WordPress, non exposé publiquement, pour permettre un retour arrière rapide.
+
+Le premier déploiement peut être manuel par SFTP. Son automatisation pourra ensuite être ajoutée avec les secrets Hostinger stockés dans GitHub Actions, jamais dans le dépôt.
 
 ## 3. Ce que révèle l'audit
 
@@ -49,25 +58,25 @@ La navigation principale actuelle contient : Open source, Boutique, Mon compte e
 
 - Produits ;
 - Open source ;
-- L'histoire de LECTIX / Fermeture ;
+- À propos ;
 - Informations légales.
 
-La page d'accueil ne comporte pas de `h1` visible et met surtout en avant dix produits, des prix, des avis et des arguments commerciaux devenus obsolètes. Le nouveau message principal doit immédiatement présenter le site comme une archive et renvoyer vers le catalogue et les sources.
+La page d'accueil ne comporte pas de `h1` visible et met surtout en avant dix produits, des prix, des avis et des arguments commerciaux devenus obsolètes. Le nouveau message principal doit immédiatement présenter LECTIX comme une marque de produits électroniques open source pour le modélisme ferroviaire, puis renvoyer vers le catalogue et les sources.
 
 ### 3.2 Contenus éditoriaux à conserver
 
 | URL actuelle | Contenu | Décision proposée |
 |---|---|---|
-| `/` | Accueil commercial et produits phares | Réécrire comme accueil d'archive |
-| `/the-end/` | Chronologie de la fermeture et mot du fondateur | Conserver l'URL et actualiser les formulations datées |
+| `/` | Accueil commercial et produits phares | Réécrire comme présentation de la marque open source |
+| `/the-end/` | Chronologie de la fermeture et mot du fondateur | Reprendre le contenu dans `/a-propos/`, puis rediriger définitivement l'ancienne URL |
 | `/open-source/` | Tutoriel de fabrication, licences et lien GitHub | Conserver et enrichir avec un index des dépôts |
-| `/mentions/` | Informations sur l'ancienne société et l'hébergeur | Conserver comme mentions historiques, après validation des données à republier |
+| `/mentions/` | Informations sur l'ancienne société et l'hébergeur | Remplacer par des informations actuelles uniquement ; retirer les données de la société fermée |
 | `/contact-us/` | Formulaire actuellement défaillant et adresse e-mail | Remplacer par une page sans formulaire ou rediriger vers la contribution GitHub |
-| `/delivery/` | Tarifs, délais, retours et garantie de la boutique | Ne pas republier comme information actuelle ; archiver ou rediriger vers `/the-end/` |
-| `/conditions-generales/` | CGV de la boutique, 26 sections | Ne plus exposer comme conditions actives ; conserver seulement une archive si nécessaire |
-| `/retractation/` | Formulaire de rétractation | Supprimer et rediriger vers `/the-end/` |
+| `/delivery/` | Tarifs, délais, retours et garantie de la boutique | Supprimer et rediriger vers `/a-propos/` |
+| `/conditions-generales/` | CGV de la boutique, 26 sections | Supprimer du site public et rediriger vers les informations légales actuelles |
+| `/retractation/` | Formulaire de rétractation | Supprimer et rediriger vers `/a-propos/` |
 | `/politique-de-confidentialite/` | Politique liée à la boutique et aux traitements WordPress | Remplacer par une courte politique adaptée au site statique |
-| `/politique-de-cookies-ue/` | Politique générée pour WooCommerce, WordPress, PayPal, Tidio, reCAPTCHA, etc. | Supprimer si le nouveau site n'emploie ni traceur ni cookie non essentiel |
+| `/politique-de-cookies-ue/` | Politique générée pour WooCommerce, WordPress, PayPal, Tidio, reCAPTCHA, etc. | Remplacer par les informations actuelles sur la mesure d'audience PostHog sans cookie |
 | `/merci/` | Confirmation de commande | Supprimer et rediriger vers `/` |
 | `/store/` et `/boutique/` | Catalogue WooCommerce | Remplacer par le catalogue statique `/produits/` |
 | `/my-account/`, `/checkout/`, `/cart/` | Écrans transactionnels | Supprimer et rediriger vers `/produits/` ou `/` |
@@ -123,13 +132,12 @@ La catégorie `~Archives` est vide et `Non classé` ne contient aucun produit. E
 
 Le site mélange WPML et des URL à paramètres. Les sitemaps exposent surtout le français, l'anglais et l'allemand, avec quelques écrans commerciaux en espagnol et italien. L'ERP contient cependant des gabarits en `fr`, `en`, `de`, `es` et `it` pour 13 familles de produits ; LEC022001, LEC022102 et LEC032002 n'ont que le français et l'anglais, et LEC005001 seulement le français.
 
-Proposition :
+La première version sera **uniquement en français**. Les contenus multilingues restent utiles comme sources, mais ne seront pas publiés dans ce premier lot.
 
-1. livrer d'abord une version française complète ;
-2. ajouter l'anglais dans la même architecture lorsque les contenus importés auront été relus ;
-3. n'activer allemand, espagnol et italien que produit par produit, selon la qualité des sources ;
-4. créer des routes propres comme `/en/products/...` et rediriger les anciennes URL à `?lang=...` côté hébergeur ;
-5. utiliser `hreflang` uniquement quand une vraie traduction existe, sans déclarer de traduction automatique ou incomplète.
+1. toutes les anciennes URL à `?lang=...` redirigeront vers leur page française équivalente ;
+2. aucun `hreflang` ne sera généré en première version ;
+3. l'architecture de contenu conservera un champ de langue afin de permettre une extension ultérieure sans refonte ;
+4. anglais, allemand, espagnol et italien ne seront ajoutés que si le trafic et la maintenance future le justifient.
 
 ## 4. Architecture d'information cible
 
@@ -141,8 +149,8 @@ Proposition :
 ├── produit/
 │   └── [slug]/                       18 URL historiques françaises conservées
 ├── open-source/                      licences, tutoriel et index des dépôts
-├── the-end/                          histoire et fermeture de LECTIX
-├── informations-legales/             politique minimale du site statique
+├── a-propos/                         histoire de LECTIX et ancien contenu de The end
+├── informations-legales/             informations actuelles, confidentialité et éditeur
 └── 404.html
 ```
 
@@ -150,11 +158,12 @@ Conserver exactement les slugs français `/produit/.../` évite une redirection 
 
 ### Contenu de l'accueil
 
-1. message de fermeture, daté et sans ambiguïté ;
-2. deux actions principales : « Consulter les produits » et « Accéder aux sources » ;
-3. sélection des principales familles de produits ;
-4. explication courte des licences matérielles et logicielles ;
-5. lien vers l'histoire de LECTIX.
+1. message principal : « LECTIX, des produits électroniques open source pour le modélisme ferroviaire » ;
+2. courte présentation de la marque, de ses domaines d'application et de sa démarche open source ;
+3. deux actions principales : « Consulter les produits » et « Accéder aux sources » ;
+4. sélection des principales familles de produits ;
+5. explication courte des licences matérielles et logicielles ;
+6. lien discret vers la page À propos, qui porte l'histoire et la fermeture de l'entreprise.
 
 ### Modèle d'une fiche produit
 
@@ -180,7 +189,8 @@ src/
 │   ├── ProductCard.astro
 │   ├── ProductGallery.astro
 │   ├── DownloadList.astro
-│   └── SourceRepository.astro
+│   ├── SourceRepository.astro
+│   └── Analytics.astro
 ├── content/
 │   ├── config.ts
 │   ├── products/*.mdx
@@ -193,14 +203,14 @@ src/
 │   ├── produits/index.astro
 │   ├── produit/[slug].astro
 │   ├── open-source.astro
-│   └── the-end.astro
+│   └── a-propos.astro
 └── styles/
 public/
 ├── assets/products/[code]/
 ├── documents/[code]/
 ├── favicon.*
 ├── robots.txt
-└── _redirects
+└── .htaccess
 scripts/
 ├── import-wordpress.mjs
 ├── import-erp.mjs
@@ -272,15 +282,17 @@ Pour la première version, il est acceptable de rendre un fragment HTML nettoyé
 
 ## 7. Plan des redirections
 
-Le fichier final de redirections doit être généré à partir d'une table versionnée et testé automatiquement.
+Le fichier `.htaccess` final doit être généré à partir d'une table de redirections versionnée et testé automatiquement sur l'environnement Hostinger de préproduction.
 
 ### Pages françaises
 
 | Ancienne URL | Destination |
 |---|---|
 | `/store/`, `/boutique/` | `/produits/` |
+| `/the-end/` | `/a-propos/` |
 | `/contact-us/` | `/open-source/#contribuer` ou une page de contact statique |
-| `/delivery/`, `/retractation/`, `/conditions-generales/` | `/the-end/` ou une archive légale validée |
+| `/delivery/`, `/retractation/` | `/a-propos/` |
+| `/conditions-generales/` | `/informations-legales/` |
 | `/politique-de-confidentialite/`, `/politique-de-cookies-ue/` | `/informations-legales/` |
 | `/merci/` | `/` |
 | `/my-account/`, `/checkout/`, `/cart/` | `/produits/` |
@@ -343,7 +355,7 @@ Ajouter les variantes anglaises et allemande à la table :
 - un seul `h1` par page ;
 - titres et descriptions spécifiques aux 18 produits ;
 - URL françaises produit conservées ;
-- canonical absolu, `hreflang` vérifié et sitemap propre ;
+- canonical absolu et sitemap propre ; aucun `hreflang` en première version française ;
 - données structurées `Product` sans `Offer`, ou `TechArticle` si cela décrit mieux l'archive ;
 - page 404 utile avec accès au catalogue ;
 - aucune URL WordPress, API, panier ou compte dans le nouveau sitemap ;
@@ -361,7 +373,42 @@ Ajouter les variantes anglaises et allemande à la table :
 
 ### Confidentialité
 
-Le site devrait fonctionner sans compte, formulaire, analytics, publicité ni cookie non essentiel. Cela permet de supprimer la bannière de consentement et de réduire la politique de confidentialité à quelques paragraphes. Une mesure d'audience ne doit être ajoutée que si elle est réellement utile et avec une solution respectueuse de la vie privée.
+Le site fonctionnera sans compte, publicité ni cookie non essentiel. Une mesure d'audience basique sera assurée par **PostHog Cloud EU**, uniquement pour décider si la fréquentation justifie de continuer à maintenir le site, l'hébergement et le nom de domaine.
+
+Configuration minimale visée, à vérifier contre la version du SDK lors de l'implémentation :
+
+```js
+posthog.init(PUBLIC_POSTHOG_TOKEN, {
+  api_host: "https://eu.i.posthog.com",
+  cookieless_mode: "always",
+  autocapture: false,
+  capture_pageview: true,
+  capture_pageleave: false,
+  capture_dead_clicks: false,
+  capture_exceptions: false,
+  capture_heatmaps: false,
+  capture_performance: false,
+  disable_session_recording: true,
+  disable_surveys: true,
+  advanced_disable_flags: true,
+  person_profiles: "identified_only",
+  respect_dnt: true,
+});
+```
+
+Règles complémentaires :
+
+- ne jamais appeler `posthog.identify()` ;
+- ne transmettre aucun nom, e-mail, identifiant client ou propriété personnalisée ;
+- nettoyer les paramètres de requête et fragments avant l'envoi de l'URL de page ;
+- limiter l'usage aux événements `$pageview` et aux agrégats pages vues / visiteurs ;
+- désactiver aussi dans le projet PostHog les fonctionnalités non utilisées ;
+- choisir une durée de conservation courte et documentée ;
+- exposer une option simple de refus et respecter le signal Do Not Track dans la mesure prise en charge par le navigateur ;
+- décrire PostHog, la finalité, les données envoyées, l'hébergement européen et la durée de conservation dans `/informations-legales/` ;
+- vérifier les obligations juridiques applicables avant la mise en production : le mode sans cookie réduit la collecte, mais ne dispense pas le propriétaire du site de documenter le traitement.
+
+La documentation officielle PostHog confirme que le mode `cookieless_mode: "always"` n'utilise ni cookie, ni session storage, ni local storage, et que l'instance Cloud EU est hébergée à Francfort. Sources : [configuration JavaScript](https://posthog.com/docs/libraries/js/config), [Web Analytics](https://posthog.com/docs/web-analytics), [confidentialité](https://posthog.com/docs/privacy).
 
 ## 9. Lots de réalisation
 
@@ -370,7 +417,8 @@ Le site devrait fonctionner sans compte, formulaire, analytics, publicité ni co
 - initialiser Astro, TypeScript strict et la collection `products` ;
 - créer les layouts, la feuille de style globale et les composants principaux ;
 - configurer formatage, lint, build et prévisualisation de branche ;
-- ajouter `robots.txt`, sitemap et configuration du domaine.
+- ajouter `robots.txt`, sitemap, `.htaccess` et configuration Hostinger ;
+- créer le dossier Hostinger indépendant et une URL de préproduction.
 
 **Critère de sortie :** une page d'accueil, une page de contenu et une fiche produit factice sont générées sans JavaScript inutile.
 
@@ -386,10 +434,12 @@ Le site devrait fonctionner sans compte, formulaire, analytics, publicité ni co
 
 ### Lot 3 — Expérience du site
 
-- construire l'accueil d'archive ;
+- construire l'accueil de présentation de la marque open source ;
 - construire le catalogue et ses filtres par catégorie ;
 - finaliser le modèle produit, les galeries, téléchargements et produits liés ;
-- reprendre `/the-end/`, `/open-source/` et les informations légales ;
+- créer `/a-propos/` à partir du contenu pertinent de `/the-end/` ;
+- reprendre `/open-source/` et réécrire les informations légales sans données obsolètes de l'ancienne société ;
+- intégrer PostHog dans un composant isolé avec la configuration minimale définie ci-dessus ;
 - rendre le site entièrement responsive.
 
 **Critère de sortie :** tout le contenu utile du site actuel est accessible sans fonctionnalité e-commerce.
@@ -399,8 +449,8 @@ Le site devrait fonctionner sans compte, formulaire, analytics, publicité ni co
 - préserver les 18 slugs produit français ;
 - implémenter et tester toutes les redirections ;
 - générer les métadonnées et données structurées ;
-- ajouter l'anglais après relecture ;
-- préparer l'ajout progressif des autres langues.
+- rediriger toutes les anciennes variantes linguistiques vers le français ;
+- conserver une structure de contenu extensible sans publier d'autres langues.
 
 **Critère de sortie :** aucune des 88 URL recensées ne renvoie une 404 non intentionnelle.
 
@@ -409,8 +459,8 @@ Le site devrait fonctionner sans compte, formulaire, analytics, publicité ni co
 - valider le HTML, les liens, l'accessibilité et l'affichage mobile ;
 - lancer Lighthouse sur accueil, catalogue, fiche produit et page éditoriale ;
 - vérifier toutes les notices et tous les dépôts GitHub ;
-- tester le domaine de préproduction et les redirections ;
-- sauvegarder le WordPress, basculer le DNS/hébergement, puis surveiller les 404.
+- tester le dossier Hostinger de préproduction, PostHog et les redirections ;
+- sauvegarder le WordPress, faire pointer le domaine vers le nouveau dossier, puis surveiller les 404 et les pages vues.
 
 **Critère de sortie :** zéro lien interne cassé, zéro média manquant, build reproductible et score Lighthouse cible supérieur à 90 dans les quatre catégories principales.
 
@@ -429,15 +479,22 @@ npm run test:a11y
 
 Le contrôle `check:legacy-urls` doit lire l'inventaire versionné et confirmer pour chaque ancienne URL l'une des issues suivantes : page statique générée, redirection permanente ou suppression explicitement documentée.
 
-## 11. Décisions à confirmer avant l'implémentation
+## 11. Décisions de cadrage
 
-1. **Langues de la première version :** français uniquement, ou français + anglais.
-2. **Mentions historiques :** conserver ou retirer l'ancienne adresse, les identifiants de société et les anciennes CGV.
-3. **Contact :** aucun contact, adresse e-mail, ou orientation vers les issues GitHub.
-4. **Avis clients :** recommandation de ne pas les migrer ; confirmer si un score agrégé anonyme doit être conservé.
-5. **Hébergement :** Cloudflare Pages recommandé, ou maintien chez Hostinger.
-6. **Mesure d'audience :** aucune par défaut.
-7. **Identité visuelle :** conserver la charte LECTIX actuelle ou créer une version plus sobre d'archive open source.
+### Décisions actées
+
+1. **Langue de la première version :** français uniquement.
+2. **Page d'accueil :** présenter LECTIX comme une marque de produits électroniques open source pour le modélisme ferroviaire, sans message de fermeture en introduction.
+3. **Page historique :** remplacer `/the-end/` par `/a-propos/`, en reprenant le contenu historique pertinent.
+4. **Mentions historiques :** retirer les anciennes coordonnées, identifiants de société, CGV et informations qui ne sont plus d'actualité.
+5. **Avis clients :** ne migrer ni les avis, ni les noms, ni le score agrégé.
+6. **Hébergement :** Hostinger, dans un dossier indépendant du WordPress.
+7. **Mesure d'audience :** PostHog Cloud EU en configuration minimale et sans cookie.
+8. **Identité visuelle :** conserver la charte LECTIX actuelle, en l'adaptant aux composants du site statique.
+
+### Décision restant à confirmer
+
+- **Contact :** aucun contact, adresse e-mail générique, ou orientation vers les issues GitHub.
 
 ## 12. Définition de « terminé »
 
@@ -449,15 +506,16 @@ La migration pourra être considérée comme terminée lorsque :
 - les 88 URL du sitemap historique ont un comportement défini et testé ;
 - les données personnelles et fichiers opérationnels sont absents du dépôt et du build ;
 - le site fonctionne sans base de données, PHP, WordPress ou ERP ;
-- le build peut être régénéré et déployé automatiquement depuis GitHub ;
+- le build peut être régénéré depuis GitHub et déployé dans le dossier Hostinger indépendant ;
+- PostHog ne collecte que les pages vues prévues, sans autocapture ni enregistrement de session ;
 - une sauvegarde du WordPress est conservée hors du dépôt public avant sa mise hors ligne.
 
 ## 13. Ordre recommandé des prochains travaux
 
-1. valider les sept décisions ci-dessus ;
+1. confirmer uniquement le mode de contact ;
 2. créer le socle Astro et le schéma de contenu ;
 3. écrire l'importeur sur deux produits représentatifs : LEC000042 (fiche complexe) et LEC030001 (description absente du WordPress) ;
 4. faire valider le rendu de ces deux fiches ;
 5. migrer les 16 autres produits ;
-6. construire les pages éditoriales, les redirections et la préproduction ;
+6. construire l'accueil, À propos, les pages éditoriales, PostHog, les redirections et la préproduction Hostinger ;
 7. effectuer la recette complète avant la bascule de `lectix.fr`.
