@@ -27,6 +27,9 @@ export const getIllustrationId = (code: string, src: string) => {
   return `${code.toLowerCase()}-${subject}`;
 };
 
+export const getIllustrationDownloadSrc = (code: string, src: string) =>
+  `/downloads/schemas/${getIllustrationId(code, src)}.png`;
+
 export const getProductImages = (content: ProductContent) => [
   ...content.details.flatMap((section) => section.images ?? []),
   ...content.gallery,

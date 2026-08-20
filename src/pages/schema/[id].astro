@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { products, type Product } from "../../data/products";
-import { getIllustrationId, getProductImages, type ProductImage } from "../../data/productDetails";
+import { getIllustrationDownloadSrc, getIllustrationId, getProductImages, type ProductImage } from "../../data/productDetails";
 
 type Illustration = {
   id: string;
@@ -19,6 +19,8 @@ export function getStaticPaths() {
 }
 
 const { product, image } = Astro.props as Illustration;
+const illustrationId = getIllustrationId(product.code, image.src);
+const downloadSrc = getIllustrationDownloadSrc(product.code, image.src);
 ---
 
 <BaseLayout title={`${image.caption} — ${product.name} — LECTIX`} description={image.alt}>
@@ -27,9 +29,9 @@ const { product, image } = Astro.props as Illustration;
       <div class="schema-intro">
         <p class="eyebrow">{product.code} · {product.name}</p>
         <h1>{image.caption}</h1>
-        <p>Le schéma complet est affiché ci-dessous. Téléchargez-le pour le conserver ou l’imprimer depuis votre ordinateur.</p>
+        <p>Le schéma complet est affiché ci-dessous. Téléchargez-le au format PNG pour le conserver ou l’imprimer depuis votre ordinateur.</p>
         <div class="button-row schema-actions">
-          <a class="button" href={image.src} download>Télécharger le schéma</a>
+          <a class="button" href={downloadSrc} download={`${illustrationId}.png`}>Télécharger le schéma en PNG</a>
           <a class="button secondary" href={`/produit/${product.slug}/`}>Revenir à la fiche produit</a>
         </div>
         <p class="schema-print-help">Pour l’imprimer, ouvrez le fichier téléchargé puis choisissez « Imprimer » dans le menu de votre ordinateur.</p>
