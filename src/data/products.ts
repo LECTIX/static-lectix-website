@@ -1,4 +1,4 @@
-import { productContentByCode, type ProductContent } from "./productDetails";
+import { productContentByCode, type ProductContent } from "./productDetails.ts";
 
 export type ProductCategory = "Accessoires" | "Analogique" | "Digital DCC";
 
