@@ -153,35 +153,35 @@ Architecture proposée :
         │
         └── POST /api/contact.php (Hostinger)
                     │
-                    ├── validation et limitation de débit
-                    └── PHPMailer → SMTP authentifié → boîte LECTIX
+                    ├── validation Turnstile + honeypot
+                    └── mail() → hsendmail Hostinger → boîte LECTIX
 ```
 
-Le site restera statique à l'exception de ce petit endpoint PHP isolé. Cette option évite un abonnement à un service de formulaires tiers et conserve le traitement principal chez Hostinger.
+Le site restera statique à l'exception de ce petit endpoint PHP isolé. Il n'aura besoin ni de Composer, ni de bibliothèque, ni d'identifiants SMTP : le transport `hsendmail` déjà fourni par Hostinger sera appelé par la fonction PHP `mail()`. Cette option évite un abonnement à un service de formulaires tiers et conserve le traitement principal chez Hostinger.
+
+La configuration Hostinger a été vérifiée directement le 20 août 2026 : l'abonnement **Hostinger Premium** associé à `lectix.fr` est actif, PHP 8.1.34 est disponible avec `curl` et OpenSSL, et `sendmail_path` pointe vers `/usr/sbin/hsendmail -t`. Ces capacités suffisent pour cette première version.
 
 Protections à mettre en œuvre :
 
 - ne jamais inclure l'adresse destinataire dans le HTML, le JavaScript ou le dépôt ;
 - utiliser une boîte ou un alias dédié et un expéditeur fixe du domaine LECTIX ;
 - placer l'adresse du visiteur dans `Reply-To`, jamais directement dans l'en-tête `From` ;
-- envoyer par SMTP authentifié avec PHPMailer, et non avec `mail()` ;
-- stocker identifiants SMTP et secret Turnstile hors de la racine publique ou dans les variables d'environnement Hostinger ;
+- stocker l'adresse destinataire et le secret Turnstile dans un fichier de configuration PHP situé hors de `public_html` et absent du dépôt ;
 - valider le jeton Turnstile côté serveur, ainsi que le nom d'hôte et l'action attendus ;
 - refuser toute requête non `POST`, hors origine autorisée ou dépassant la taille maximale ;
 - valider et borner chaque champ, supprimer les retours de ligne d'en-tête et échapper le contenu ;
 - ajouter un champ honeypot et un temps minimal de remplissage ;
-- limiter le nombre d'envois par source avec un identifiant IP haché à courte durée de vie, sans journaliser l'adresse IP brute ;
 - ne conserver ni le corps du message ni l'e-mail du visiteur dans les logs applicatifs ;
-- afficher des réponses génériques afin de ne révéler ni l'adresse réelle ni les détails SMTP ;
+- afficher des réponses génériques afin de ne révéler ni l'adresse réelle ni les détails d'envoi ;
 - ajouter les domaines Turnstile nécessaires à la Content Security Policy ;
-- tester les succès, échecs, expirations, rejeux de jeton et limites de débit avec les clés de test officielles.
+- tester les succès, échecs, expirations et rejeux de jeton avec les clés de test officielles.
 
-Cloudflare indique que Turnstile fonctionne sur n'importe quel site, sans que le trafic passe par son réseau, mais exige une validation du jeton côté serveur. Hostinger prend en charge PHP, Composer et SMTP et recommande PHPMailer avec SMTP plutôt que l'envoi PHP non authentifié. La disponibilité exacte de PHP, SSH/Composer et du service e-mail devra être vérifiée sur le forfait Hostinger utilisé avant l'implémentation. Sources : [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/get-started/), [tests Turnstile](https://developers.cloudflare.com/turnstile/troubleshooting/testing/), [intégration e-mail Hostinger](https://support.hostinger.com/en/articles/1583505-how-to-integrate-hostinger-email-into-your-website), [SMTP Hostinger](https://support.hostinger.com/en/articles/1575756-how-to-get-email-account-configuration-details-for-hostinger-email), [Composer chez Hostinger](https://support.hostinger.com/en/articles/5792078-how-to-use-composer).
+Cloudflare indique que Turnstile fonctionne sur n'importe quel site, sans que le trafic passe par son réseau, mais exige une validation du jeton côté serveur. Sources : [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/get-started/), [tests Turnstile](https://developers.cloudflare.com/turnstile/troubleshooting/testing/), [limites de l'envoi PHP chez Hostinger](https://support.hostinger.com/en/articles/11393648-php-mail-limitation-explained-how-to-improve-email-delivery-with-smtp).
 
 Solutions de repli, par ordre de préférence :
 
-1. endpoint PHP + SMTP + Turnstile chez Hostinger ;
-2. service de formulaire tiers avec anti-spam, si le forfait ne permet pas l'endpoint recommandé ;
+1. si les messages envoyés par `mail()` arrivent mal, conserver le même formulaire et remplacer seulement l'envoi par PHPMailer + SMTP authentifié ;
+2. service de formulaire tiers avec anti-spam, si le transport Hostinger ne donne pas satisfaction ;
 3. adresse obfusquée ou lien `mailto:`, uniquement en dernier recours car cette protection est contournable.
 
 ## 4. Architecture d'information cible
@@ -470,7 +470,7 @@ La documentation officielle PostHog confirme que le mode `cookieless_mode: "alwa
 - configurer formatage, lint, build et prévisualisation de branche ;
 - ajouter `robots.txt`, sitemap, `.htaccess` et configuration Hostinger ;
 - créer le dossier Hostinger indépendant et une URL de préproduction.
-- vérifier que le forfait Hostinger retenu permet PHP, SMTP authentifié et, idéalement, Composer ;
+- conserver une version PHP prise en charge par Hostinger pour l'endpoint de contact ;
 - préparer une méthode de déploiement des secrets qui les maintient hors du dépôt et de la racine publique.
 
 **Critère de sortie :** une page d'accueil, une page de contenu et une fiche produit factice sont générées sans JavaScript inutile.
@@ -492,7 +492,7 @@ La documentation officielle PostHog confirme que le mode `cookieless_mode: "alwa
 - finaliser le modèle produit, les galeries, téléchargements et produits liés ;
 - créer `/a-propos/` à partir du contenu pertinent de `/the-end/` ;
 - reprendre `/open-source/` et réécrire les informations légales sans données obsolètes de l'ancienne société ;
-- créer `/contact/` et l'endpoint PHP isolé, avec PHPMailer, SMTP authentifié, Turnstile, honeypot et limitation de débit ;
+- créer `/contact/` et l'endpoint PHP isolé, avec `mail()`, Turnstile et honeypot ;
 - intégrer PostHog dans un composant isolé avec la configuration minimale définie ci-dessus ;
 - rendre le site entièrement responsive.
 
@@ -548,10 +548,10 @@ Le contrôle `check:legacy-urls` doit lire l'inventaire versionné et confirmer 
 8. **Identité visuelle :** conserver la charte LECTIX actuelle, en l'adaptant aux composants du site statique.
 9. **Contact :** proposer un formulaire protégé qui transmet les messages par un endpoint PHP Hostinger, sans publier l'adresse destinataire.
 
-### Vérification technique restante
+### Validation de mise en service restante
 
-- confirmer que le forfait Hostinger choisi fournit PHP, SMTP authentifié et les moyens de garder les secrets hors de la racine publique ; si Composer n'est pas disponible, PHPMailer pourra être préparé lors du build et déployé avec l'endpoint ;
 - créer ou choisir la boîte ou l'alias LECTIX qui recevra les messages, sans inscrire son adresse dans le dépôt.
+- effectuer un test réel de délivrabilité ; ne passer à PHPMailer + SMTP que si les messages envoyés par `hsendmail` arrivent mal ou sont classés comme indésirables.
 
 ## 12. Définition de « terminé »
 
@@ -570,7 +570,7 @@ La migration pourra être considérée comme terminée lorsque :
 
 ## 13. Ordre recommandé des prochains travaux
 
-1. vérifier les capacités PHP, SMTP et de gestion des secrets du forfait Hostinger ;
+1. choisir la boîte ou l'alias de destination et créer les clés Turnstile ;
 2. créer le socle Astro et le schéma de contenu ;
 3. écrire l'importeur sur deux produits représentatifs : LEC000042 (fiche complexe) et LEC030001 (description absente du WordPress) ;
 4. faire valider le rendu de ces deux fiches ;
