@@ -95,15 +95,5 @@ const turnstileSiteKey =
       <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
     )
   }
-  <script>
-    const startedInput = document.querySelector<HTMLInputElement>("[data-form-started]");
-    if (startedInput) startedInput.value = Math.floor(Date.now() / 1000).toString();
-
-    const status = new URLSearchParams(window.location.search).get("status");
-    const statusBox = status ? document.querySelector<HTMLElement>(`[data-status="${status}"]`) : null;
-    if (statusBox) {
-      statusBox.hidden = false;
-      statusBox.focus();
-    }
-  </script>
+  <script is:inline src="/scripts/contact.js" defer></script>
 </BaseLayout>
