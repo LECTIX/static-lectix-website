@@ -3,12 +3,13 @@ import type { Product } from "../data/products";
 
 type Props = {
   product: Product;
+  compact?: boolean;
 };
 
-const { product } = Astro.props;
+const { product, compact = false } = Astro.props;
 ---
 
-<article class="product-card">
+<article class:list={["product-card", { "product-card-compact": compact }]}>
   <a class="product-card-image" href={`/produit/${product.slug}/`} tabindex="-1" aria-hidden="true">
     <img src={product.image} alt="" width="600" height="600" loading="lazy" />
   </a>
@@ -18,7 +19,7 @@ const { product } = Astro.props;
       <span>{product.code}</span>
     </div>
     <h3><a href={`/produit/${product.slug}/`}>{product.name}</a></h3>
-    <p>{product.summary}</p>
+    {!compact && <p>{product.summary}</p>}
     <a class="card-link" href={`/produit/${product.slug}/`}>Voir la fiche du produit <span aria-hidden="true">→</span></a>
   </div>
 </article>
