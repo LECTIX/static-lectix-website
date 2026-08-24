@@ -1,50 +1,89 @@
 <script>
-  import posthog from "posthog-js/dist/module.slim";
+  import posthog from "posthog-js";
   import { POSTHOG_API_HOST, POSTHOG_PRODUCTION_HOSTNAMES, POSTHOG_PROJECT_TOKEN } from "../config/posthog";
 
   const privacyNavigator = navigator as Navigator & { globalPrivacyControl?: boolean };
   const isProductionWebsite = POSTHOG_PRODUCTION_HOSTNAMES.has(window.location.hostname);
   const allowsAudienceMeasurement = navigator.doNotTrack !== "1" && privacyNavigator.globalPrivacyControl !== true;
+  const capturedEvents = new Set(["$pageview", "$pageleave", "$autocapture", "$web_vitals", "$exception"]);
+
+  const removeUrlParameters = (value: unknown) => {
+    if (typeof value !== "string" || value === "") return value;
+
+    try {
+      const url = new URL(value);
+      return `${url.origin}${url.pathname}`;
+    } catch {
+      return undefined;
+    }
+  };
 
   if (POSTHOG_PROJECT_TOKEN && isProductionWebsite && allowsAudienceMeasurement) {
     posthog.init(POSTHOG_PROJECT_TOKEN, {
       api_host: POSTHOG_API_HOST,
       ui_host: "https://eu.posthog.com",
       defaults: "2026-05-30",
-      cookieless_mode: "always",
+      // Un identifiant aléatoire limité à l'onglet permet de mesurer une session
+      // sans cookie, profil utilisateur ni suivi persistant entre deux visites.
+      persistence: "sessionStorage",
       person_profiles: "never",
-      autocapture: false,
+      autocapture: {
+        dom_event_allowlist: ["click", "submit"],
+        element_allowlist: ["a", "button", "form"],
+        css_selector_ignorelist: [".ph-no-capture", ".ph-no-autocapture", "[data-ph-no-autocapture]"],
+        capture_copied_text: false,
+      },
       rageclick: false,
+      // Astro génère ici un site multi-page sans routeur côté client : une seule
+      // page vue est donc émise à chaque chargement complet.
       capture_pageview: true,
-      capture_pageleave: false,
+      capture_pageleave: "if_capture_pageview",
       capture_dead_clicks: false,
-      capture_exceptions: false,
+      capture_exceptions: {
+        capture_unhandled_errors: true,
+        capture_unhandled_rejections: true,
+        capture_console_errors: false,
+      },
       capture_heatmaps: false,
-      capture_performance: false,
+      capture_performance: {
+        network_timing: false,
+        web_vitals: true,
+        web_vitals_attribution: false,
+      },
       disable_session_recording: true,
       disable_surveys: true,
       disable_product_tours: true,
       disable_web_experiments: true,
       disable_conversations: true,
+      // Les fonctionnalités utilisées sont toutes configurées localement : aucune
+      // évaluation de feature flag ni configuration distante n'est nécessaire.
       advanced_disable_flags: true,
+      strict_script_versioning: true,
       logs: { captureConsoleLogs: false },
       opt_in_site_apps: false,
       respect_dnt: true,
+      mask_personal_data_properties: true,
+      custom_personal_data_properties: ["email", "name", "subject", "message"],
+      disable_capture_url_hashes: true,
+      // Conserver les événements automatisés au lieu de les écarter. PostHog
+      // ajoute alors $browser_type et peut les classer grâce au User-Agent brut.
+      opt_out_useragent_filter: true,
       before_send: (event) => {
-        if (!event || event.event !== "$pageview") return null;
+        if (!event || !capturedEvents.has(event.event)) return null;
 
-        const properties = { ...event.properties };
+        const properties: Record<string, unknown> = {
+          ...event.properties,
+          $raw_user_agent: navigator.userAgent,
+          $environment: "production",
+        };
 
-        for (const property of ["$current_url", "$referrer"] as const) {
-          const value = properties[property];
+        for (const property of ["$current_url", "$referrer", "$exception_url"] as const) {
+          const sanitizedValue = removeUrlParameters(properties[property]);
 
-          if (typeof value !== "string" || value === "") continue;
-
-          try {
-            const url = new URL(value);
-            properties[property] = `${url.origin}${url.pathname}`;
-          } catch {
+          if (sanitizedValue === undefined) {
             delete properties[property];
+          } else if (sanitizedValue !== properties[property]) {
+            properties[property] = sanitizedValue;
           }
         }
 

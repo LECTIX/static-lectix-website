@@ -12,7 +12,7 @@
   "dependencies": {
     "@astrojs/sitemap": "latest",
     "astro": "latest",
-    "posthog-js": "latest"
+    "posthog-js": "1.418.13"
   },
   "devDependencies": {
     "@astrojs/check": "latest",
