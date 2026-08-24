@@ -13,7 +13,7 @@ npm run dev
 
 Copier `.env.example` vers `.env` pour activer localement Turnstile ou remplacer le jeton public PostHog. Les secrets serveur ne doivent jamais être placés dans `.env` ni dans le dépôt.
 
-La mesure d'audience PostHog est déjà reliée au projet LECTIX. Elle ne démarre que sur `lectix.fr` et `www.lectix.fr`, afin que les consultations locales ne faussent pas les statistiques. Le jeton de projet PostHog est public par conception ; `PUBLIC_POSTHOG_KEY` permet seulement de le remplacer. La configuration envoie uniquement les pages vues, sans cookie, profil visiteur, autocapture ni enregistrement de session, et respecte les signaux Do Not Track et Global Privacy Control.
+La mesure d'audience PostHog est déjà reliée au projet LECTIX. Elle ne démarre que sur `lectix.fr` et `www.lectix.fr`, afin que les consultations locales ne faussent pas les statistiques. Le jeton de projet PostHog est public par conception ; `PUBLIC_POSTHOG_KEY` permet seulement de le remplacer. La configuration utilise uniquement `sessionStorage` : aucun cookie, aucun profil visiteur et aucun suivi persistant entre deux visites. Elle mesure les pages vues et quittées, les clics sur les liens et boutons, les Web Vitals et les erreurs JavaScript non gérées. Le formulaire de contact, les valeurs saisies, les enregistrements de session, les cartes de chaleur et les journaux de console restent exclus. Les signaux Do Not Track et Global Privacy Control sont respectés.
 
 ## Vérifications
 
