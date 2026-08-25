@@ -1,14 +1,44 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageIntro from "../components/PageIntro.astro";
+import { createFaqStructuredData } from "../data/seo";
 
 const turnstileSiteKey =
   import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAAEW_pWLNdOrbdsoj";
+
+const faqs = [
+  {
+    question: "Les produits LECTIX sont-ils encore vendus ?",
+    answer:
+      "Non. La société LECTIX est fermée et ne fabrique plus ces produits. Ce site conserve leurs descriptions et leurs fichiers open source, mais ce n’est plus une boutique.",
+  },
+  {
+    question: "Comment puis-je me procurer un module ?",
+    answer:
+      "LECTIX ne dispose plus de stock et ne connaît pas de revendeur officiel. Un ancien module peut parfois être trouvé d’occasion. Pour les produits open source, une autre possibilité consiste à faire fabriquer la carte à partir des fichiers disponibles sur GitHub.",
+  },
+  {
+    question: "Je ne connais pas l’électronique. Qui peut m’aider à fabriquer une carte ?",
+    answer:
+      "Un club de modélisme ferroviaire, un fablab ou une personne habituée à l’électronique pourra vous aider à commander le circuit imprimé et à souder les composants. Commencez par lui transmettre le lien GitHub indiqué sur la fiche du produit.",
+  },
+  {
+    question: "Pouvez-vous réparer mon module ou assurer le service après-vente ?",
+    answer:
+      "Non. Il n’y a plus de service après-vente commercial ni de garantie en cours. Les descriptions, schémas et fichiers open source présents sur le site peuvent toutefois aider une personne compétente à rechercher une panne.",
+  },
+  {
+    question: "Où trouver les notices et les fichiers techniques ?",
+    answer:
+      "Commencez par la fiche du produit. Lorsqu’une notice française est disponible, un bouton permet de télécharger directement le PDF. Les schémas peuvent aussi être ouverts en grand et imprimés. Le bouton « Accéder aux fichiers techniques » conduit au dossier GitHub pour les plans et programmes.",
+  },
+];
 ---
 
 <BaseLayout
   title="Contact — LECTIX"
   description="Consultez les réponses aux questions fréquentes sur les produits LECTIX et signalez une erreur ou un document manquant."
+  structuredData={createFaqStructuredData("/contact/", faqs)}
 >
   <PageIntro
     eyebrow="Contact"
@@ -22,26 +52,12 @@ const turnstileSiteKey =
         <h2 id="questions-frequentes">Les questions les plus courantes</h2>
       </div>
       <div class="faq-list">
-        <details open>
-          <summary>Les produits LECTIX sont-ils encore vendus&nbsp;?</summary>
-          <p>Non. La société LECTIX est fermée et ne fabrique plus ces produits. Ce site conserve leurs descriptions et leurs fichiers open source, mais ce n’est plus une boutique.</p>
-        </details>
-        <details>
-          <summary>Comment puis-je me procurer un module&nbsp;?</summary>
-          <p>LECTIX ne dispose plus de stock et ne connaît pas de revendeur officiel. Un ancien module peut parfois être trouvé d’occasion. Pour les produits open source, une autre possibilité consiste à faire fabriquer la carte à partir des fichiers disponibles sur GitHub.</p>
-        </details>
-        <details>
-          <summary>Je ne connais pas l’électronique. Qui peut m’aider à fabriquer une carte&nbsp;?</summary>
-          <p>Un club de modélisme ferroviaire, un fablab ou une personne habituée à l’électronique pourra vous aider à commander le circuit imprimé et à souder les composants. Commencez par lui transmettre le lien GitHub indiqué sur la fiche du produit.</p>
-        </details>
-        <details>
-          <summary>Pouvez-vous réparer mon module ou assurer le service après-vente&nbsp;?</summary>
-          <p>Non. Il n’y a plus de service après-vente commercial ni de garantie en cours. Les descriptions, schémas et fichiers open source présents sur le site peuvent toutefois aider une personne compétente à rechercher une panne.</p>
-        </details>
-        <details>
-          <summary>Où trouver les notices et les fichiers techniques&nbsp;?</summary>
-          <p>Commencez par la fiche du produit. Lorsqu’une notice française est disponible, un bouton permet de télécharger directement le PDF. Les schémas peuvent aussi être ouverts en grand et imprimés. Le bouton « Accéder aux fichiers techniques » conduit au dossier GitHub pour les plans et programmes.</p>
-        </details>
+        {faqs.map((faq, index) => (
+          <details open={index === 0}>
+            <summary>{faq.question}</summary>
+            <p>{faq.answer}</p>
+          </details>
+        ))}
       </div>
     </div>
   </section>

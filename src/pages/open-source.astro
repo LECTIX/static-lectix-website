@@ -2,11 +2,36 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageIntro from "../components/PageIntro.astro";
 import { products } from "../data/products";
+import { createFaqStructuredData } from "../data/seo";
+
+const faqs = [
+  {
+    question: "Que signifie « open source » ?",
+    answer:
+      "Les documents utilisés pour concevoir le produit sont publiés. Vous pouvez télécharger les fichiers disponibles pour réparer, modifier ou refaire le produit.",
+  },
+  {
+    question: "Faut-il savoir programmer ?",
+    answer:
+      "Non. Les fiches et les notices restent utiles à tous. Les programmes et les fichiers de fabrication s’adressent seulement aux personnes qui souhaitent aller plus loin.",
+  },
+  {
+    question: "Où sont rangés les fichiers ?",
+    answer:
+      "Ils sont hébergés sur GitHub. Les boutons présents sur cette page vous conduisent directement vers le dossier du produit choisi.",
+  },
+  {
+    question: "Puis-je modifier ou fabriquer une carte ?",
+    answer:
+      "Oui, lorsque la licence du projet l’autorise. Pensez à lire le fichier de licence présent dans chaque dossier avant de commencer.",
+  },
+];
 ---
 
 <BaseLayout
   title="Produits électroniques open source — LECTIX"
   description="Découvrez ce que signifie open source et téléchargez les plans, programmes et documents des produits LECTIX."
+  structuredData={createFaqStructuredData("/open-source/", faqs)}
 >
   <PageIntro
     eyebrow="Open source"
@@ -50,22 +75,12 @@ import { products } from "../data/products";
         <h2 id="faq-open-source">L’open source, simplement</h2>
       </div>
       <div class="faq-list">
-        <details>
-          <summary>Que signifie « open source »&nbsp;?</summary>
-          <p>Les documents utilisés pour concevoir le produit sont publiés. Vous pouvez télécharger les fichiers disponibles pour réparer, modifier ou refaire le produit.</p>
-        </details>
-        <details>
-          <summary>Faut-il savoir programmer&nbsp;?</summary>
-          <p>Non. Les fiches et les notices restent utiles à tous. Les programmes et les fichiers de fabrication s’adressent seulement aux personnes qui souhaitent aller plus loin.</p>
-        </details>
-        <details>
-          <summary>Où sont rangés les fichiers&nbsp;?</summary>
-          <p>Ils sont hébergés sur GitHub. Les boutons présents sur cette page vous conduisent directement vers le dossier du produit choisi.</p>
-        </details>
-        <details>
-          <summary>Puis-je modifier ou fabriquer une carte&nbsp;?</summary>
-          <p>Oui, lorsque la licence du projet l’autorise. Pensez à lire le fichier de licence présent dans chaque dossier avant de commencer.</p>
-        </details>
+        {faqs.map((faq) => (
+          <details>
+            <summary>{faq.question}</summary>
+            <p>{faq.answer}</p>
+          </details>
+        ))}
       </div>
     </div>
   </section>

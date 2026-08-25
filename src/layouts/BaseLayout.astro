@@ -5,12 +5,29 @@ import Analytics from "../components/Analytics.astro";
 type Props = {
   title: string;
   description: string;
+  image?: string;
+  imageAlt?: string;
+  ogType?: "website" | "article";
+  robots?: string;
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
 };
 
-const { title, description } = Astro.props;
+const {
+  title,
+  description,
+  image = "/images/hero-reseau-miniature.webp",
+  imageAlt = "Produits électroniques LECTIX pour le modélisme ferroviaire",
+  ogType = "website",
+  robots = "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1",
+  structuredData,
+} = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const socialImage = new URL(image, Astro.site);
 const currentPath = Astro.url.pathname;
 const year = new Date().getFullYear();
+const serializedStructuredData = structuredData
+  ? JSON.stringify(structuredData).replaceAll("<", "\\u003c")
+  : undefined;
 
 const isCurrent = (href: string) =>
   href === "/" ? currentPath === "/" : currentPath.startsWith(href);
@@ -22,14 +39,24 @@ const isCurrent = (href: string) =>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
     <meta name="theme-color" content="#f4f0e9" />
     <link rel="canonical" href={canonical} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content="LECTIX" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:image:alt" content={imageAlt} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {serializedStructuredData && <script is:inline type="application/ld+json" set:html={serializedStructuredData} />}
     <title>{title}</title>
   </head>
   <body>

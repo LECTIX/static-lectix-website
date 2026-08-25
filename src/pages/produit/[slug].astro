@@ -3,6 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import { products, type Product } from "../../data/products";
 import ProductIllustration from "../../components/ProductIllustration.astro";
 import { useCases } from "../../data/useCases";
+import { createProductStructuredData } from "../../data/seo";
 
 export function getStaticPaths() {
   return products.map((product) => ({
@@ -20,12 +21,23 @@ const productUseCases = useCases.flatMap((useCase) => {
   const link = useCase.products.find(({ code }) => code === product.code);
   return link ? [{ ...useCase, anchor: link.anchor }] : [];
 });
+const metaDescription = `Fiche du ${product.name} (${product.code}) pour train miniature : usages, caractéristiques, schémas, notice et fichiers open source.`;
 ---
 
-<BaseLayout title={`${product.name} — LECTIX`} description={product.summary}>
+<BaseLayout
+  title={`${product.name} ${product.code} — LECTIX`}
+  description={metaDescription}
+  image={product.image}
+  imageAlt={product.imageAlt}
+  ogType="article"
+  structuredData={createProductStructuredData(product)}
+>
   <section class="product-detail-hero">
     <div class="container product-detail-grid">
       <div class="product-detail-copy">
+        <nav class="breadcrumbs" aria-label="Fil d’Ariane">
+          <a href="/">Accueil</a><span aria-hidden="true">/</span><a href="/produits/">Produits</a>
+        </nav>
         <p class="eyebrow">{product.category} · {product.code}</p>
         <h1>{product.name}</h1>
         <p class="lead">{product.introduction}</p>

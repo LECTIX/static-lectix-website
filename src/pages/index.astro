@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ProductCard from "../components/ProductCard.astro";
 import { products } from "../data/products";
+import { homeStructuredData } from "../data/seo";
 
 const highlightedCodes = ["LEC000042", "LEC001020", "LEC008011"];
 const highlightedProducts = highlightedCodes.flatMap((code) => {
@@ -13,6 +14,9 @@ const highlightedProducts = highlightedCodes.flatMap((code) => {
 <BaseLayout
   title="LECTIX — Produits électroniques pour le train miniature"
   description="Découvrez les modules électroniques open source LECTIX, conçus pour les automatismes et le modélisme ferroviaire."
+  image="/images/hero-reseau-miniature.webp"
+  imageAlt="Réseau de train miniature équipé de modules électroniques LECTIX"
+  structuredData={homeStructuredData}
 >
   <section class="hero home-hero">
     <img

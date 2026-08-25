@@ -3,11 +3,13 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageIntro from "../../components/PageIntro.astro";
 import ProductCard from "../../components/ProductCard.astro";
 import { products } from "../../data/products";
+import { createProductListStructuredData } from "../../data/seo";
 ---
 
 <BaseLayout
   title="Les produits LECTIX pour le train miniature"
-  description="Consultez les fiches des produits électroniques LECTIX pour le train miniature."
+  description="Consultez les 16 produits électroniques LECTIX pour le train miniature : usages, caractéristiques, notices, schémas et fichiers open source."
+  structuredData={createProductListStructuredData(products)}
 >
   <PageIntro
     eyebrow="Les produits LECTIX"

@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import PageIntro from "../components/PageIntro.astro";
 import { products } from "../data/products";
 import { useCases, useCaseCategories } from "../data/useCases";
+import { createUseCaseListStructuredData } from "../data/seo";
 
 const productByCode = new Map(products.map((product) => [product.code, product]));
 ---
@@ -10,6 +11,8 @@ const productByCode = new Map(products.map((product) => [product.code, product])
 <BaseLayout
   title="Automatismes et usages pour le train miniature — LECTIX"
   description="Cantonnement, détection, arrêt automatique, navette, signalisation et autres automatismes réalisables avec les modules LECTIX."
+  image="/images/usage-cantonnement.webp"
+  structuredData={createUseCaseListStructuredData(useCases)}
 >
   <PageIntro
     eyebrow="Choisir par usage"

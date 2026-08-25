@@ -2,6 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { products, type Product } from "../../data/products";
 import { getIllustrationDownloadSrc, getIllustrationId, getProductImages, type ProductImage } from "../../data/productDetails";
+import { createBreadcrumbStructuredData } from "../../data/seo";
 
 type Illustration = {
   id: string;
@@ -21,12 +22,31 @@ export function getStaticPaths() {
 const { product, image } = Astro.props as Illustration;
 const illustrationId = getIllustrationId(product.code, image.src);
 const downloadSrc = getIllustrationDownloadSrc(product.code, image.src);
+const structuredData = {
+  "@context": "https://schema.org",
+  ...createBreadcrumbStructuredData([
+    { name: "Accueil", path: "/" },
+    { name: "Produits", path: "/produits/" },
+    { name: product.name, path: `/produit/${product.slug}/` },
+    { name: image.caption, path: `/schema/${illustrationId}/` },
+  ]),
+};
 ---
 
-<BaseLayout title={`${image.caption} — ${product.name} — LECTIX`} description={image.alt}>
+<BaseLayout
+  title={`${image.caption} — ${product.name} — LECTIX`}
+  description={image.alt}
+  image={image.src}
+  imageAlt={image.alt}
+  robots="noindex,follow"
+  structuredData={structuredData}
+>
   <section class="schema-page">
     <div class="container">
       <div class="schema-intro">
+        <nav class="breadcrumbs" aria-label="Fil d’Ariane">
+          <a href="/">Accueil</a><span aria-hidden="true">/</span><a href="/produits/">Produits</a><span aria-hidden="true">/</span><a href={`/produit/${product.slug}/`}>{product.name}</a>
+        </nav>
         <p class="eyebrow">{product.code} · {product.name}</p>
         <h1>{image.caption}</h1>
         <p>Le schéma complet est affiché ci-dessous. Téléchargez-le au format PNG pour le conserver ou l’imprimer depuis votre ordinateur.</p>

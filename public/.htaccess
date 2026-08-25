@@ -1,25 +1,83 @@
 Options -Indexes
 DirectoryIndex index.html
+ErrorDocument 404 /404.html
 
 RewriteEngine On
+
+# Une seule origine canonique pour regrouper les signaux de référencement.
+RewriteCond %{HTTP_HOST} ^www\.lectix\.fr$ [NC]
+RewriteRule ^ https://lectix.fr%{REQUEST_URI} [R=301,L,NE]
+
+# La première version est uniquement française : supprimer les anciens
+# paramètres WPML au lieu de laisser indexer plusieurs URL identiques.
+RewriteCond %{QUERY_STRING} (^|&)lang=[^&]*(&|$) [NC]
+RewriteRule ^ %{REQUEST_URI} [R=301,L,NE,QSD]
+
+# Anciennes notices PDF encore présentes dans les résultats de recherche.
+RewriteRule ^static/LEC000042/manual_fr\.pdf$ /notices/LEC000042-notice-fr.pdf [R=301,L,NE]
+RewriteRule ^static/LEC000042A/manual_fr\.pdf$ /notices/LEC000042A-notice-fr.pdf [R=301,L,NE]
+RewriteRule ^static/LEC000043/manual_fr\.pdf$ /notices/LEC000043-notice-fr.pdf [R=301,L,NE]
+RewriteRule ^static/LEC001020/manual_fr\.pdf$ /notices/LEC001020-notice-fr.pdf [R=301,L,NE]
+RewriteRule ^static/LEC001021/manual_fr\.pdf$ /notices/LEC001021-notice-fr.pdf [R=301,L,NE]
+RewriteRule ^static/LEC008011/manual_fr\.pdf$ /notices/LEC008011-notice-fr.pdf [R=301,L,NE]
+RewriteRule ^static/LEC009002/manual_fr\.pdf$ /notices/LEC009002-notice-fr.pdf [R=301,L,NE]
+RewriteRule ^static/LEC011001/manual_fr\.pdf$ /notices/LEC011001-notice-fr.pdf [R=301,L,NE]
+RewriteRule ^static/LEC032002/manual_fr\.pdf$ /notices/LEC032002-notice-fr.pdf [R=301,L,NE]
 
 # Anciennes pages principales
 Redirect 301 /store/ /produits/
 Redirect 301 /boutique/ /produits/
+Redirect 301 /shop/ /produits/
+Redirect 301 /shop-2/ /produits/
+Redirect 301 /negozio/ /produits/
+Redirect 301 /tienda/ /produits/
 Redirect 301 /the-end/ /a-propos/
 Redirect 301 /contact-us/ /contact/
 Redirect 301 /delivery/ /a-propos/
+Redirect 301 /delivery-and-returns/ /a-propos/
 Redirect 301 /retractation/ /a-propos/
+Redirect 301 /withdrawal/ /a-propos/
+Redirect 301 /widerruf/ /a-propos/
 Redirect 301 /conditions-generales/ /informations-legales/
 Redirect 301 /mentions/ /informations-legales/
 Redirect 301 /politique-de-confidentialite/ /informations-legales/
 Redirect 301 /politique-de-cookies-ue/ /informations-legales/
 Redirect 301 /my-account/ /produits/
 Redirect 301 /mon-compte/ /produits/
+Redirect 301 /my-account-2/ /produits/
+Redirect 301 /mein-account/ /produits/
+Redirect 301 /mi-cuenta/ /produits/
+Redirect 301 /il-mio-account/ /produits/
 Redirect 301 /checkout/ /produits/
+Redirect 301 /checkout-2/ /produits/
+Redirect 301 /zur-kasse/ /produits/
+Redirect 301 /confirmar/ /produits/
+Redirect 301 /completa-transazione/ /produits/
 Redirect 301 /cart/ /produits/
 Redirect 301 /panier/ /produits/
+Redirect 301 /cart-2/ /produits/
+Redirect 301 /einkaufswagen/ /produits/
+Redirect 301 /carrito/ /produits/
+Redirect 301 /carrello/ /produits/
 Redirect 301 /merci/ /
+Redirect 301 /thank-you/ /
+Redirect 301 /dankeschoen/ /
+Redirect 301 /gracias/ /
+Redirect 301 /grazie/ /
+
+# Anciennes catégories WordPress.
+RewriteRule ^categorie-produit(?:/.*)?$ /produits/ [R=301,L,NE]
+RewriteRule ^product-category(?:/.*)?$ /produits/ [R=301,L,NE]
+
+# Slugs de produits traduits ou remplacés.
+Redirect 301 /produit/distribution-terminal-secable-xl/ /produit/bornier-de-distribution-secable-xl/
+Redirect 301 /produit/distribution-terminal-breakout/ /produit/bornier-de-distribution-secable/
+Redirect 301 /produit/breakout-terminal-block-2-x-8-pin-copie/ /produits/
+Redirect 301 /produit/dcc-braking-module-3a/ /produit/module-de-freinage-dcc-3a/
+Redirect 301 /produit/timer-relay/ /produit/relais-temporise-10-min/
+Redirect 301 /produit/ir-sensor/ /produit/detecteur-ir/
+Redirect 301 /produit/lec200014b/ /produits/
+Redirect 301 /produit/red-push-button/ /produits/
 
 # Astro génère des dossiers avec index.html
 RewriteCond %{REQUEST_FILENAME} !-f
