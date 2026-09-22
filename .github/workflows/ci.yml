@@ -1,31 +1,131 @@
-name: Vérification du site
+name: Deploy to Hostinger
 
 on:
   push:
-    branches: [main, docs/plan-migration-site-statique]
-  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: hostinger-production
+  cancel-in-progress: true
+
 jobs:
-  build:
+  deploy:
+    name: Build and deploy
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+
     steps:
-      - name: Récupérer les sources
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Installer Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
-      - name: Installer les dépendances
+      - name: Install dependencies
         run: npm ci
 
-      - name: Vérifier Astro et TypeScript
+      - name: Check Astro
         run: npm run check
 
-      - name: Construire le site statique
+      - name: Build website
         run: npm run build
+        env:
+          ASTRO_TELEMETRY_DISABLED: 1
+
+      - name: Add PHP contact endpoint
+        run: |
+          mkdir -p dist/api
+          cp server/contact.php dist/api/contact.php
+
+      - name: Check SEO
+        run: npm run check:seo
+
+      - name: Validate build
+        run: |
+          test -f dist/index.html
+          test -f dist/api/contact.php
+
+          if find dist -type f \( \
+            -name 'contact-config.php' -o \
+            -name '*.env' -o \
+            -name '.DS_Store' \
+          \) -print -quit | grep -q .; then
+            echo "Sensitive file found in dist"
+            exit 1
+          fi
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+          printf '%s\n' "${{ secrets.HOSTINGER_SSH_PRIVATE_KEY }}" \
+            > ~/.ssh/id_ed25519
+
+          chmod 600 ~/.ssh/id_ed25519
+
+          printf '%s\n' "${{ secrets.HOSTINGER_KNOWN_HOSTS }}" \
+            > ~/.ssh/known_hosts
+
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Create deployment archive
+        run: |
+          tar -czf /tmp/lectix-deploy.tar.gz -C dist .
+
+      - name: Upload deployment
+        run: |
+          scp \
+            -P 65002 \
+            /tmp/lectix-deploy.tar.gz \
+            u506231805@147.93.92.168:/home/u506231805/domains/lectix.fr/.lectix-deploy.tar.gz
+
+      - name: Deploy website
+        run: |
+          ssh \
+            -p 65002 \
+            u506231805@147.93.92.168 \
+            'bash -s' <<'EOF'
+          set -euo pipefail
+
+          DOMAIN_DIR="/home/u506231805/domains/lectix.fr"
+          SITE="$DOMAIN_DIR/public_html"
+          ARCHIVE="$DOMAIN_DIR/.lectix-deploy.tar.gz"
+          STAGING="$DOMAIN_DIR/.deploy-staging"
+
+          rm -rf "$STAGING"
+          mkdir -p "$STAGING"
+
+          tar -xzf "$ARCHIVE" -C "$STAGING"
+
+          # Never deploy a broken build
+          test -f "$STAGING/index.html"
+          test -f "$STAGING/api/contact.php"
+
+          # Preserve Hostinger/Let's Encrypt files if present
+          if [ -d "$SITE/.well-known" ]; then
+            cp -a "$SITE/.well-known" "$STAGING/.well-known"
+          fi
+
+          # Remove the previous public website only.
+          # contact-config.php is outside public_html and is therefore untouched.
+          find "$SITE" \
+            -mindepth 1 \
+            -maxdepth 1 \
+            -exec rm -rf {} +
+
+          cp -a "$STAGING/." "$SITE/"
+
+          rm -rf "$STAGING"
+          rm -f "$ARCHIVE"
+
+          echo "Deployment completed successfully."
+          EOF
