@@ -15,12 +15,17 @@ const faqs = [
   {
     question: "Comment puis-je me procurer un module ?",
     answer:
-      "LECTIX ne dispose plus de stock et ne connaît pas de revendeur officiel. Un ancien module peut parfois être trouvé d’occasion. Pour les produits open source, une autre possibilité consiste à faire fabriquer la carte à partir des fichiers disponibles sur GitHub.",
+      "LECTIX ne dispose plus de stock et ne connaît pas de revendeur officiel. Un ancien module peut parfois être trouvé d’occasion. Pour les produits open source, une autre possibilité consiste à faire fabriquer et assembler la carte par un prestataire à partir des fichiers disponibles sur GitHub.",
   },
   {
     question: "Je ne connais pas l’électronique. Qui peut m’aider à fabriquer une carte ?",
     answer:
-      "Un club de modélisme ferroviaire, un fablab ou une personne habituée à l’électronique pourra vous aider à commander le circuit imprimé et à souder les composants. Commencez par lui transmettre le lien GitHub indiqué sur la fiche du produit.",
+      "Pour les modèles dont les fichiers le permettent, un fabricant peut assembler les composants sur la carte. Si vous avez besoin d’aide pour préparer la commande ou suivre les instructions propres à la référence, un club de modélisme ferroviaire, un fablab ou une personne habituée à l’électronique pourra vous accompagner. Commencez par lui transmettre le lien GitHub indiqué sur la fiche du produit.",
+  },
+  {
+    question: "Quel prix pour un ou plusieurs modules ?",
+    answer:
+      "Les fichiers sont gratuits ; la fabrication est payante. Pour un ou plusieurs modules, obtenez un chiffrage auprès du fabricant avec la quantité souhaitée. Le montant dépend notamment des composants, de l’assemblage et de la livraison ; LECTIX ne fournit pas de devis.",
   },
   {
     question: "Pouvez-vous réparer mon module ou assurer le service après-vente ?",
@@ -50,6 +55,7 @@ const faqs = [
       <div>
         <p class="eyebrow">Avant de nous écrire</p>
         <h2 id="questions-frequentes">Les questions les plus courantes</h2>
+        <a class="button secondary contact-guide-link" href="/open-source/#obtenir-un-module">Vous cherchez à vous procurer un module&nbsp;? Consultez le guide et le tutoriel</a>
       </div>
       <div class="faq-list">
         {faqs.map((faq, index) => (

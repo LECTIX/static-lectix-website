@@ -485,6 +485,34 @@ nav a[aria-current="page"] {
   color: var(--ink-soft);
 }
 
+.catalog-access-section {
+  padding: 30px 0;
+  background: var(--mist);
+}
+
+.catalog-access-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.catalog-access-inner h2 {
+  margin: 0;
+  font-size: clamp(1.45rem, 2.5vw, 1.9rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.catalog-access-inner p {
+  margin: 6px 0 0;
+  color: var(--ink-soft);
+}
+
+.catalog-access-inner .button {
+  flex: 0 0 auto;
+}
+
 .catalog-categories {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -563,6 +591,10 @@ nav a[aria-current="page"] {
 
 .product-detail-copy .lead {
   margin-inline: 0;
+}
+
+.product-access-button {
+  margin-top: 18px;
 }
 
 .product-detail-image {
@@ -839,6 +871,10 @@ nav a[aria-current="page"] {
   background: var(--mist);
 }
 
+.repository-section {
+  scroll-margin-top: 100px;
+}
+
 .notice-panel-inner,
 .callout-inner {
   display: flex;
@@ -855,6 +891,11 @@ nav a[aria-current="page"] {
 .notice-panel p:not(.eyebrow),
 .callout-section p:not(.eyebrow) {
   color: var(--ink-soft);
+}
+
+.product-guide-access-link {
+  display: inline-block;
+  margin-top: 4px;
 }
 
 .schema-page {
@@ -986,6 +1027,117 @@ nav a[aria-current="page"] {
   margin-top: 20px;
 }
 
+.module-access-section {
+  scroll-margin-top: 100px;
+  background: var(--paper);
+}
+
+.open-source-practice-section {
+  background: var(--mist);
+}
+
+.module-access-content > p:first-child {
+  margin-top: 0;
+}
+
+.module-access-steps {
+  display: grid;
+  gap: 18px;
+  margin: 32px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.module-access-steps li {
+  position: relative;
+  padding: 0 0 0 48px;
+}
+
+.module-access-step-number {
+  position: absolute;
+  top: 1px;
+  left: 0;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border-radius: 50%;
+  color: white;
+  background: var(--blue);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.module-access-steps strong {
+  display: block;
+  color: var(--ink);
+}
+
+.module-access-steps p {
+  margin: 5px 0 0;
+  color: var(--ink-soft);
+}
+
+.module-tutorial-card {
+  display: block;
+  margin-top: 38px;
+  padding: 26px;
+  border-radius: 22px;
+  background: white;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 4%);
+}
+
+.module-tutorial-card h3,
+.module-access-notes h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.32rem;
+  line-height: 1.22;
+  letter-spacing: -0.018em;
+}
+
+.module-tutorial-card p:not(.eyebrow),
+.module-access-notes p {
+  color: var(--ink-soft);
+}
+
+.module-tutorial-card p:not(.eyebrow) {
+  margin: 9px 0 0;
+}
+
+.module-tutorial-embed {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin-top: 20px;
+  border: 0;
+  border-radius: 16px;
+  background: var(--ink);
+}
+
+.module-tutorial-note {
+  margin-bottom: 0 !important;
+  font-size: 0.88rem;
+}
+
+.module-access-notes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 38px;
+  padding-top: 30px;
+  border-top: 1px solid var(--line);
+}
+
+.module-access-notes p {
+  margin: 10px 0 0;
+}
+
+.module-files-link {
+  display: inline-block;
+  margin-top: 28px;
+}
+
 .repository-heading {
   margin: 0 0 32px;
   font-size: clamp(1.8rem, 3vw, 2.55rem);
@@ -1108,6 +1260,12 @@ nav a[aria-current="page"] {
 
 .contact-faq {
   background: white;
+}
+
+.contact-guide-link {
+  display: inline-flex;
+  margin-top: 28px;
+  text-align: left;
 }
 
 .contact-grid {
@@ -1617,9 +1775,14 @@ nav a[aria-current="page"] {
   .section-heading,
   .footer-inner,
   .notice-panel-inner,
-  .callout-inner {
+  .callout-inner,
+  .catalog-access-inner {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .module-access-notes {
+    grid-template-columns: 1fr;
   }
 
   .page-intro .narrow {
@@ -1727,6 +1890,10 @@ nav a[aria-current="page"] {
   .catalog-group-heading {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .contact-guide-link {
+    width: 100%;
   }
 
   .repository-row {

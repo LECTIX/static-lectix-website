@@ -38,7 +38,7 @@ const faqs = [
     title="Les produits LECTIX sont open source."
     lead="Les plans, les listes de composants et les programmes sont publics et disponibles gratuitement. Vous pouvez les utiliser pour réparer un produit, le modifier ou fabriquer votre propre carte."
   />
-  <section class="content-section">
+  <section class="content-section open-source-practice-section">
     <div class="container two-column-content">
       <div>
         <p class="eyebrow">En pratique</p>
@@ -51,10 +51,64 @@ const faqs = [
       </div>
     </div>
   </section>
-  <section class="repository-section">
+  <section class="content-section module-access-section" id="obtenir-un-module" aria-labelledby="obtenir-un-module-title">
+    <div class="container two-column-content">
+      <div>
+        <p class="eyebrow">Fabriquer un module</p>
+        <h2 id="obtenir-un-module-title">Comment se procurer un module LECTIX&nbsp;?</h2>
+      </div>
+      <div class="module-access-content">
+        <p>Les fichiers open source permettent de faire fabriquer des modules par un prestataire, avec assemblage des composants selon le modèle et les fichiers disponibles. LECTIX ne commercialise plus les modules, mais vous pouvez utiliser les ressources ci-dessous pour préparer votre fabrication.</p>
+        <ol class="module-access-steps">
+          <li>
+            <span class="module-access-step-number" aria-hidden="true">1</span>
+            <strong>Récupérer les fichiers du module.</strong>
+            <p>Depuis sa fiche, ouvrir «&nbsp;Accéder aux fichiers techniques&nbsp;», puis suivre les instructions du dépôt pour télécharger les fichiers de fabrication.</p>
+          </li>
+          <li>
+            <span class="module-access-step-number" aria-hidden="true">2</span>
+            <strong>Faire fabriquer et assembler la carte.</strong>
+            <p>Le tutoriel présente la démarche chez JLCPCB. Prévoir l’assemblage des composants en plus du circuit imprimé&nbsp;: commander le circuit seul ne fournit pas un module assemblé. Les instructions propres à la référence restent prioritaires.</p>
+          </li>
+          <li>
+            <span class="module-access-step-number" aria-hidden="true">3</span>
+            <strong>Choisir la quantité et consulter le prix.</strong>
+            <p>Le prestataire chiffre la fabrication selon les fichiers, l’assemblage et la quantité demandée. Vérifier le détail de l’offre et la livraison avant de commander.</p>
+          </li>
+        </ol>
+        <article class="module-tutorial-card" aria-labelledby="module-tutorial-title">
+          <div>
+            <h3 id="module-tutorial-title">La démarche de fabrication</h3>
+            <iframe
+              class="module-tutorial-embed"
+              src="https://www.youtube.com/embed/RXGGvsUtz0c"
+              title="Le tutoriel pour faire fabriquer votre module"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+            ></iframe>
+            <p class="module-tutorial-note">L’interface du fabricant et les disponibilités peuvent avoir évolué depuis le tutoriel.</p>
+          </div>
+        </article>
+        <div class="module-access-notes">
+          <div>
+            <h3>Combien cela coûte&nbsp;?</h3>
+            <p>Les fichiers sont gratuits&nbsp;; la fabrication est payante. Pour un ou plusieurs modules, obtenez un chiffrage auprès du fabricant avec la quantité souhaitée. Le montant dépend notamment des composants, de l’assemblage et de la livraison&nbsp;; LECTIX ne fournit pas de devis.</p>
+          </div>
+          <div>
+            <h3>Besoin d’aide&nbsp;?</h3>
+            <p>Vous pouvez vous faire accompagner par un club de modélisme, un fablab ou une personne habituée à ces démarches. Il est également possible de rechercher des modules d’occasion, selon les offres disponibles.</p>
+          </div>
+        </div>
+        <a class="text-link module-files-link" href="#fichiers-produits">Trouver les fichiers de mon module</a>
+      </div>
+    </div>
+  </section>
+  <section class="repository-section" id="fichiers-produits" aria-labelledby="fichiers-produits-title">
     <div class="container">
       <p class="eyebrow">Produits open source déjà disponibles</p>
-      <h2 class="repository-heading">Accéder directement aux fichiers d’un produit</h2>
+      <h2 class="repository-heading" id="fichiers-produits-title">Accéder directement aux fichiers d’un produit</h2>
       <div class="repository-list">
         {
           products.filter((product) => product.sourceRepository).map((product) => (

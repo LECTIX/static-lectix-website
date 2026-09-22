@@ -53,6 +53,9 @@ const metaDescription = `Fiche du ${product.name} (${product.code}) pour train m
             </a>
           )}
         </div>
+        {product.sourceRepository && (
+          <a class="button secondary product-access-button" href="/open-source/#obtenir-un-module">Comment se procurer ce module&nbsp;?</a>
+        )}
       </div>
       <div class="product-detail-image">
         <img src={product.image} alt={product.imageAlt} width="1200" height="1200" />
@@ -147,6 +150,7 @@ const metaDescription = `Fiche du ${product.name} (${product.code}) pour train m
             <p class="eyebrow">Pour aller plus loin</p>
             <h2>Plans et fichiers de fabrication</h2>
             <p>Le dossier GitHub rassemble les fichiers techniques disponibles pour réparer, modifier ou refaire ce produit.</p>
+            <a class="text-link product-guide-access-link" href="/open-source/#obtenir-un-module">Voir comment faire fabriquer un module</a>
           </div>
           <a class="button" href={product.sourceRepository}>Ouvrir le dossier GitHub</a>
         </div>
