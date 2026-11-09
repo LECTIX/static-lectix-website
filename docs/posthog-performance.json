@@ -1,0 +1,26 @@
+{
+  "projectId": 253861,
+  "dashboardId": 1098334,
+  "url": "https://eu.posthog.com/project/253861/dashboard/1098334",
+  "timezone": "UTC",
+  "created": "2026-11-09",
+  "insights": {
+    "weeks": {
+      "id": 7222453,
+      "shortId": "wjG8f8h3"
+    },
+    "pages": {
+      "id": 7222454,
+      "shortId": "Fn4CXdHu"
+    },
+    "missing": {
+      "id": 7222464,
+      "shortId": "l4eG2eKt"
+    }
+  },
+  "queries": {
+    "pages": "SELECT substring(replaceRegexpAll(properties.$pathname,'[^0-9A-Za-z/_:.-]',''),1,200) AS page, countIf(timestamp >= toStartOfDay(now()) - INTERVAL 21 DAY) AS mesures_recents, uniqIf($session_id, timestamp >= toStartOfDay(now()) - INTERVAL 21 DAY) AS sessions_recents, if(countIf(timestamp >= toStartOfDay(now()) - INTERVAL 21 DAY) = 0, NULL, round(quantileIf(0.75)(toFloat(properties.$web_vitals_FCP_value), timestamp >= toStartOfDay(now()) - INTERVAL 21 DAY))) AS p75_recents_ms, if(countIf(timestamp >= toStartOfDay(now()) - INTERVAL 21 DAY) = 0, NULL, round(quantileIf(0.9)(toFloat(properties.$web_vitals_FCP_value), timestamp >= toStartOfDay(now()) - INTERVAL 21 DAY))) AS p90_recents_ms, countIf(timestamp < toStartOfDay(now()) - INTERVAL 21 DAY) AS mesures_precedents, uniqIf($session_id, timestamp < toStartOfDay(now()) - INTERVAL 21 DAY) AS sessions_precedents, if(countIf(timestamp < toStartOfDay(now()) - INTERVAL 21 DAY) = 0, NULL, round(quantileIf(0.75)(toFloat(properties.$web_vitals_FCP_value), timestamp < toStartOfDay(now()) - INTERVAL 21 DAY))) AS p75_precedents_ms, if(countIf(timestamp < toStartOfDay(now()) - INTERVAL 21 DAY) = 0, NULL, round(quantileIf(0.9)(toFloat(properties.$web_vitals_FCP_value), timestamp < toStartOfDay(now()) - INTERVAL 21 DAY))) AS p90_precedents_ms, if(countIf(timestamp >= toStartOfDay(now()) - INTERVAL 21 DAY) < 30 OR countIf(timestamp < toStartOfDay(now()) - INTERVAL 21 DAY) < 30, 'Peu de mesures', 'À comparer') AS lecture FROM events WHERE event = '$web_vitals' AND timestamp >= toStartOfDay(now()) - INTERVAL 42 DAY AND timestamp < toStartOfDay(now()) AND properties.$host IN ('lectix.fr','www.lectix.fr') AND properties.$browser_type = 'browser' AND person_id NOT IN COHORT 216568 AND properties.$web_vitals_FCP_value IS NOT NULL AND (toString(properties.site_page_status) = '200' OR (properties.site_page_status IS NULL AND properties.$pathname NOT IN (SELECT properties.$pathname FROM events WHERE event = '$pageview' AND timestamp >= toStartOfDay(now()) - INTERVAL 42 DAY AND timestamp < toStartOfDay(now()) AND properties.$host IN ('lectix.fr','www.lectix.fr') AND properties.title = 'Page introuvable — LECTIX'))) GROUP BY page ORDER BY mesures_recents DESC LIMIT 50",
+    "weeks": "SELECT toStartOfWeek(timestamp,1) AS semaine_utc, count() AS mesures, uniq($session_id) AS sessions, round(quantile(0.75)(toFloat(properties.$web_vitals_FCP_value))) AS fcp_p75_ms, round(quantile(0.9)(toFloat(properties.$web_vitals_FCP_value))) AS fcp_p90_ms FROM events WHERE event = '$web_vitals' AND timestamp >= toStartOfDay(now()) - INTERVAL 42 DAY AND timestamp < toStartOfDay(now()) AND properties.$host IN ('lectix.fr','www.lectix.fr') AND properties.$browser_type = 'browser' AND person_id NOT IN COHORT 216568 AND properties.$web_vitals_FCP_value IS NOT NULL AND (toString(properties.site_page_status) = '200' OR (properties.site_page_status IS NULL AND properties.$pathname NOT IN (SELECT properties.$pathname FROM events WHERE event = '$pageview' AND timestamp >= toStartOfDay(now()) - INTERVAL 42 DAY AND timestamp < toStartOfDay(now()) AND properties.$host IN ('lectix.fr','www.lectix.fr') AND properties.title = 'Page introuvable — LECTIX'))) GROUP BY semaine_utc ORDER BY semaine_utc",
+    "missing": "SELECT substring(replaceRegexpAll(properties.$pathname,'[^0-9A-Za-z/_:.-]',''),1,200) AS page, count() AS consultations, uniq($session_id) AS sessions, max(timestamp) AS derniere_visite FROM events WHERE event='$pageview' AND timestamp >= toStartOfDay(now()) - INTERVAL 21 DAY AND timestamp < toStartOfDay(now()) AND properties.$host IN ('lectix.fr','www.lectix.fr') AND properties.$browser_type='browser' AND person_id NOT IN COHORT 216568 AND (toString(properties.site_page_status)='404' OR properties.title='Page introuvable — LECTIX') GROUP BY page ORDER BY consultations DESC LIMIT 30"
+  }
+}

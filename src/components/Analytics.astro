@@ -1,11 +1,15 @@
 <script>
   import posthog from "posthog-js";
   import { POSTHOG_API_HOST, POSTHOG_PRODUCTION_HOSTNAMES, POSTHOG_PROJECT_TOKEN } from "../config/posthog";
+  import { navigationDiagnostics } from "../lib/analytics-diagnostics";
 
-  const privacyNavigator = navigator as Navigator & { globalPrivacyControl?: boolean };
+  const privacyNavigator = navigator as Navigator & {
+    globalPrivacyControl?: boolean;
+    connection?: { effectiveType?: string; saveData?: boolean };
+  };
   const isProductionWebsite = POSTHOG_PRODUCTION_HOSTNAMES.has(window.location.hostname);
   const allowsAudienceMeasurement = navigator.doNotTrack !== "1" && privacyNavigator.globalPrivacyControl !== true;
-  const capturedEvents = new Set(["$pageview", "$pageleave", "$autocapture", "$web_vitals", "$exception"]);
+  const capturedEvents = new Set(["$pageview", "$pageleave", "$autocapture", "$web_vitals", "$exception", "contact_verification_error"]);
 
   const removeUrlParameters = (value: unknown) => {
     if (typeof value !== "string" || value === "") return value;
@@ -75,9 +79,15 @@
           ...event.properties,
           $raw_user_agent: navigator.userAgent,
           $environment: "production",
+          site_page_status: Number(document.querySelector('meta[name="lectix-page-status"]')?.getAttribute("content") || 200),
+          $app_version: import.meta.env.PUBLIC_SITE_RELEASE,
+          ...navigationDiagnostics(
+            performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined,
+            privacyNavigator.connection,
+          ),
         };
 
-        for (const property of ["$current_url", "$referrer", "$exception_url"] as const) {
+        for (const property of ["$current_url", "$referrer", "$exception_url", "$session_entry_url", "$session_exit_url"] as const) {
           const sanitizedValue = removeUrlParameters(properties[property]);
 
           if (sanitizedValue === undefined) {
@@ -87,8 +97,34 @@
           }
         }
 
+        for (const metric of ["FCP", "LCP", "INP", "CLS"]) {
+          const key = `$web_vitals_${metric}_event`;
+          const value = properties[key];
+          if (value && typeof value === "object" && "$current_url" in value) {
+            properties[key] = { ...value, $current_url: removeUrlParameters(value.$current_url) };
+          }
+        }
+
         return { ...event, properties };
       },
     });
+
+    // Ne transmettre que les motifs techniques, jamais le contenu du formulaire.
+    const verificationReasons = new Set(["challenge", "expired", "timeout", "unsupported", "render", "reset", "script_load", "script_timeout"]);
+    const captureVerificationError = (detail: { reason?: string; code?: string } | undefined) => {
+      if (!detail || typeof detail.reason !== "string" || !verificationReasons.has(detail.reason)) return;
+      posthog.capture("contact_verification_error", {
+        reason: detail.reason,
+        ...(typeof detail.code === "string" && /^\d{3,6}$/.test(detail.code) ? { code: detail.code } : {}),
+      });
+    };
+    window.addEventListener("lectix:verification-error", (event) => {
+      if (event instanceof CustomEvent) captureVerificationError(event.detail);
+    });
+    // Une erreur de chargement peut précéder l'initialisation du SDK.
+    const verification = document.querySelector<HTMLElement>("[data-contact-verification]");
+    if (verification?.dataset.verificationFailure) {
+      captureVerificationError({ reason: verification.dataset.verificationFailure, code: verification.dataset.verificationCode });
+    }
   }
 </script>

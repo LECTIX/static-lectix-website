@@ -1340,6 +1340,10 @@ nav a[aria-current="page"] {
   transform: none;
 }
 
+.contact-form [hidden] {
+  display: none !important;
+}
+
 .form-status {
   margin-bottom: 24px;
   padding: 15px 17px;

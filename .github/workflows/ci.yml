@@ -39,6 +39,7 @@ jobs:
         run: npm run build
         env:
           ASTRO_TELEMETRY_DISABLED: 1
+          PUBLIC_SITE_RELEASE: ${{ github.sha }}
 
       - name: Add PHP contact endpoint
         run: |
@@ -47,6 +48,9 @@ jobs:
 
       - name: Check SEO
         run: npm run check:seo
+
+      - name: Check browser behavior and privacy
+        run: npm test
 
       - name: Validate build
         run: |

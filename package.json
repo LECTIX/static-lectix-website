@@ -8,7 +8,10 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "check:seo": "node scripts/check-seo.mjs"
+    "check:seo": "node scripts/check-seo.mjs",
+    "test": "npm run test:unit && npm run test:browser",
+    "test:unit": "node --experimental-strip-types --test tests/diagnostics.test.mjs",
+    "test:browser": "node --test tests/browser.test.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "latest",
@@ -17,6 +20,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "latest",
+    "playwright-core": "^1.65.0",
     "typescript": "latest"
   }
 }

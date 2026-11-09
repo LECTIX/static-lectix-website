@@ -13,7 +13,7 @@ npm run dev
 
 Copier `.env.example` vers `.env` pour activer localement Turnstile ou remplacer le jeton public PostHog. Les secrets serveur ne doivent jamais être placés dans `.env` ni dans le dépôt.
 
-La mesure d'audience PostHog est déjà reliée au projet LECTIX. Elle ne démarre que sur `lectix.fr` et `www.lectix.fr`, afin que les consultations locales ne faussent pas les statistiques. Le jeton de projet PostHog est public par conception ; `PUBLIC_POSTHOG_KEY` permet seulement de le remplacer. La configuration utilise uniquement `sessionStorage` : aucun cookie, aucun profil visiteur et aucun suivi persistant entre deux visites. Elle mesure les pages vues et quittées, les clics sur les liens et boutons, les Web Vitals et les erreurs JavaScript non gérées. Le formulaire de contact, les valeurs saisies, les enregistrements de session, les cartes de chaleur et les journaux de console restent exclus. Les signaux Do Not Track et Global Privacy Control sont respectés.
+La mesure d'audience PostHog est déjà reliée au projet LECTIX. Elle ne démarre que sur `lectix.fr` et `www.lectix.fr`, afin que les consultations locales ne faussent pas les statistiques. Le jeton de projet PostHog est public par conception ; `PUBLIC_POSTHOG_KEY` permet seulement de le remplacer. La configuration utilise uniquement `sessionStorage` : aucun cookie, aucun profil visiteur et aucun suivi persistant entre deux visites. Elle mesure les pages vues et quittées, les clics sur les liens et boutons, les Web Vitals et les erreurs JavaScript non gérées. Les valeurs saisies et les interactions du formulaire de contact, les enregistrements de session, les cartes de chaleur et les journaux de console restent exclus. Seuls les motifs techniques d’échec de la vérification du formulaire sont mesurés, sans jeton ni contenu saisi. Les signaux Do Not Track et Global Privacy Control sont respectés.
 
 Le référencement est documenté dans `AUDIT_REFERENCEMENT.md`. Le build génère un sitemap limité aux pages éditoriales et produit, des données structurées JSON-LD et `/llms.txt`. Après `npm run build`, exécuter `npm run check:seo` pour vérifier titres, descriptions, canonicals, liens internes, JSON-LD, directives robots et concordance du sitemap.
 
@@ -23,9 +23,34 @@ Le référencement est documenté dans `AUDIT_REFERENCEMENT.md`. Le build génè
 npm run check
 npm run build
 npm run check:seo
+npm test
 ```
 
+`npm test` nécessite Google Chrome installé. Les tests interceptent toutes les requêtes : aucun événement réel ni e-mail n’est envoyé.
+
 Le résultat statique est généré dans `dist/`.
+
+## Suivi des performances et des liens cassés
+
+Le tableau [Lectix · Performances et liens cassés](https://eu.posthog.com/project/253861/dashboard/1098334) sépare les performances des pages utiles et les visites de pages 404. Il affiche le FCP hebdomadaire, les volumes et sessions par page, ainsi que les p75/p90 sur les 21 derniers jours complets comparés aux 21 précédents (UTC). Les robots connus et la cohorte interne sont exclus. Si une période a moins de 30 mesures, la comparaison est signalée comme fragile ; ce repère n’est pas un seuil de fiabilité statistique. Les requêtes et identifiants sont conservés dans `docs/posthog-performance.json`.
+
+Chaque événement porte `site_page_status` (200 ou 404) et `$app_version`. Les vues historiques reconnaissent les anciennes pages 404 grâce au titre enregistré sur leurs pages vues ; cette détection est indicative lorsque la page vue manque. Les jours incomplets sont exclus. Les vues SQL ont des fenêtres fixes : le sélecteur de dates global du tableau ne remplace pas ces fenêtres.
+
+`$app_version` provient de `PUBLIC_SITE_RELEASE` (le commit GitHub dans le déploiement automatique), sinon de Git avec un suffixe `-dirty` si les fichiers suivis ont été modifiés. Hors dépôt Git, la valeur est `unversioned`.
+
+Les propriétés `navigation_*` mesurent le délai avant le premier octet, l’attente après l’envoi de la requête, le téléchargement, les étapes de traitement du document et les tailles de transfert. Une étape non terminée n’est pas publiée comme un zéro. Les informations de connexion se limitent à la catégorie fournie par le navigateur et au mode d’économie de données, sans adresse réseau. Le suivi reste limité à l’onglet, sans cookie ni profil persistant. Les paramètres et fragments d’URL sont retirés des URL principales, des URL de session et des objets Web Vitals.
+
+Le formulaire attend une vérification valide avant l’envoi. Un échec, une expiration, un navigateur incompatible ou un chargement trop long affiche un message et un bouton de reprise sans effacer la saisie. La vérification serveur reste obligatoire. L’événement `contact_verification_error` contient seulement un motif prédéfini et, s’il existe, un code numérique. Les tests utilisent une vérification simulée ; ils ne démontrent pas la disponibilité réelle de Cloudflare ni la réception d’un e-mail.
+
+L’essai d’allègement du 9 novembre 2026 a été évalué sur les fichiers générés, avant compression et après gzip. La version standard avec diagnostics pesait 253 400 octets (83 511 après gzip). Les bundles slim précompilés avec les deux extensions locales pesaient 294 237 octets (94 530 après gzip), et la variante ESM 662 069 octets (170 628 après gzip). La version standard et la dépendance `posthog-js` 1.418.13 sont conservées. Aucun gain de FCP en production n’est revendiqué ; les diagnostics doivent d’abord permettre d’attribuer les lenteurs.
+
+Les nouvelles redirections sont exactes, acceptent les anciennes notices avec ou sans barre finale et laissent les URL inconnues en 404. Pour contrôler les réponses réelles, servir `dist/` avec Apache et les règles `.htaccess`, puis exécuter :
+
+```sh
+LECTIX_TEST_BASE_URL=http://127.0.0.1:18741 node scripts/check-redirects.mjs
+```
+
+Le serveur de développement Astro ne reproduit pas les redirections Apache.
 
 ## Organisation de la production
 

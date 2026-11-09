@@ -9,6 +9,7 @@ type Props = {
   imageAlt?: string;
   ogType?: "website" | "article";
   robots?: string;
+  pageStatus?: 200 | 404;
   structuredData?: Record<string, unknown> | Record<string, unknown>[];
 };
 
@@ -19,6 +20,7 @@ const {
   imageAlt = "Produits électroniques LECTIX pour le modélisme ferroviaire",
   ogType = "website",
   robots = "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1",
+  pageStatus = 200,
   structuredData,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -38,6 +40,7 @@ const isCurrent = (href: string) =>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
+    <meta name="lectix-page-status" content={String(pageStatus)} />
     <meta name="description" content={description} />
     <meta name="robots" content={robots} />
     <meta name="theme-color" content="#f4f0e9" />

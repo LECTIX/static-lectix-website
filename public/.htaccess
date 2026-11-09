@@ -24,6 +24,17 @@ RewriteRule ^static/LEC009002/manual_fr\.pdf$ /notices/LEC009002-notice-fr.pdf [
 RewriteRule ^static/LEC011001/manual_fr\.pdf$ /notices/LEC011001-notice-fr.pdf [R=301,L,NE]
 RewriteRule ^static/LEC032002/manual_fr\.pdf$ /notices/LEC032002-notice-fr.pdf [R=301,L,NE]
 
+# Liens WordPress encore consultés (avec ou sans la barre finale ajoutée
+# autrefois par la règle générale). Ne pas rediriger les URL inconnues.
+RewriteRule ^produit/lec008011/documents/LEC008011_manual_FR\.pdf/?$ /notices/LEC008011-notice-fr.pdf [R=301,L,NE]
+RewriteRule ^produit/lec011001/documents/manual_fr\.pdf/?$ /notices/LEC011001-notice-fr.pdf [R=301,L,NE]
+RewriteRule ^produit/lec001020/documents/Breaking_module_manual\.pdf/?$ /notices/LEC001020-notice-fr.pdf [R=301,L,NE]
+RewriteRule ^produit/dcc-braking-module/?$ /produit/module-de-freinage-dcc/ [R=301,L,NE]
+RewriteRule ^(?:basket|commander|validation-de-commande)/?$ /produits/ [R=301,L,NE]
+RewriteRule ^sitemap\.xml/?$ /sitemap-index.xml [R=301,L,NE]
+RewriteRule ^static/LEC001021/BM1-wiring-diagram\.png/?$ /downloads/schemas/lec001021-cablage.png [R=301,L,NE]
+RewriteRule ^produits/lost-password/?$ /produits/ [R=301,L,NE]
+
 # Anciennes pages principales
 Redirect 301 /store/ /produits/
 Redirect 301 /boutique/ /produits/

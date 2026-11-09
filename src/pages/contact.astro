@@ -102,20 +102,20 @@ const faqs = [
         <input type="hidden" name="form_started" value="0" data-form-started />
         {
           turnstileSiteKey ? (
-            <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-action="contact" data-theme="light" />
+            <>
+              <div data-contact-verification data-sitekey={turnstileSiteKey} />
+              <p id="verification-status" class="form-privacy" role="status" aria-live="polite" tabindex="-1" data-verification-status>Vérification avant l’envoi en cours…</p>
+              <button class="button secondary" type="button" hidden data-verification-retry>Réessayer la vérification</button>
+            </>
           ) : (
             <p class="setup-note">Le formulaire sera activé après configuration de la clé Turnstile sur l’environnement Hostinger.</p>
           )
         }
-        <button class="button" type="submit" disabled={!turnstileSiteKey}>Envoyer le message</button>
+        <button class="button" type="submit" disabled aria-describedby={turnstileSiteKey ? "verification-status" : undefined}>Envoyer le message</button>
+        <noscript><p>Activez JavaScript pour vérifier et envoyer le formulaire.</p></noscript>
         <p class="form-privacy">Les informations saisies servent uniquement à répondre à votre message. Elles ne sont pas envoyées à PostHog.</p>
       </form>
     </div>
   </section>
-  {
-    turnstileSiteKey && (
-      <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
-    )
-  }
   <script is:inline src="/scripts/contact.js" defer></script>
 </BaseLayout>
